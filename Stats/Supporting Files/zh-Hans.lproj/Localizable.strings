@@ -570,3 +570,12 @@
 "Login to System Stats to see your devices" = "登录 System Stats 以查看您的设备"; // qwen3.8:27b
 "Monitor HTTP, ICMP and custom endpoints" = "监控 HTTP、ICMP 和自定义端点"; // qwen3.8:27b
 "Monitor and control your Macs from anywhere. Sign in to your System Stats account to see all your devices and hosts in one place." = "随时随地监控和控制你的 Mac。登录你的 System Stats 账户，即可在一个地方查看所有设备和主机。"; // qwen3.8:27b
+
+// Quick Actions
+"Keep awake" = "保持亮屏";
+"Prevent screen from sleeping" = "防止屏幕变暗或进入休眠";
+"No sleep on lid" = "合盖不休眠";
+"Prevent sleep when lid is closed" = "合上屏幕时阻止系统休眠";
+"Screensaver" = "屏幕保护";
+"Start screen saver" = "立即启动屏幕保护程序";
+

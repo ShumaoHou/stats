@@ -139,7 +139,7 @@ internal class PopupViewController: NSViewController {
             x: 0,
             y: 0,
             width: Constants.Popup.width + (Constants.Popup.margins * 2),
-            height: Constants.Popup.height+Constants.Popup.headerHeight
+            height: Constants.Popup.height + Constants.Popup.headerHeight + QuickActionsView.viewHeight
         ), module: module)
         super.init(nibName: nil, bundle: nil)
     }
@@ -186,6 +186,7 @@ internal class PopupView: NSView {
     private var background: NSView
     
     private let header: HeaderView
+    private let quickActionsView: QuickActionsView
     private let body: NSScrollView
     
     override var intrinsicContentSize: CGSize {
@@ -201,11 +202,12 @@ internal class PopupView: NSView {
             width: frame.width,
             height: Constants.Popup.headerHeight
         ), module: module)
+        self.quickActionsView = QuickActionsView()
         self.body = NSScrollView(frame: NSRect(
             x: Constants.Popup.margins,
             y: Constants.Popup.margins,
             width: frame.width - Constants.Popup.margins*2,
-            height: frame.height - self.header.frame.height - Constants.Popup.margins*2
+            height: frame.height - self.header.frame.height - QuickActionsView.viewHeight - Constants.Popup.margins*2
         ))
         self.windowHeight = NSScreen.main?.visibleFrame.height
         self.containerHeight = self.body.documentView?.frame.height
@@ -234,6 +236,7 @@ internal class PopupView: NSView {
         
         self.addSubview(self.foreground, positioned: .below, relativeTo: .none)
         self.addSubview(self.header)
+        self.addSubview(self.quickActionsView)
         self.addSubview(self.body)
     }
     
@@ -251,7 +254,7 @@ internal class PopupView: NSView {
         var isScrollVisible: Bool = false
         var size: NSSize = NSSize(
             width: (view?.frame.width ?? Constants.Popup.width) + (Constants.Popup.margins*2),
-            height: (view?.frame.height ?? 0) + Constants.Popup.headerHeight + (Constants.Popup.margins*2)
+            height: (view?.frame.height ?? 0) + Constants.Popup.headerHeight + QuickActionsView.viewHeight + (Constants.Popup.margins*2)
         )
         
         self.windowHeight = NSScreen.main?.visibleFrame.height // for height recalculate when appear/disappear
@@ -269,6 +272,12 @@ internal class PopupView: NSView {
         self.background.setFrameSize(size)
         self.resizeBody(size, scrollVisible: isScrollVisible)
         self.header.setFrameOrigin(NSPoint(x: 0, y: size.height - Constants.Popup.headerHeight))
+        self.quickActionsView.frame = NSRect(
+            x: 0,
+            y: size.height - Constants.Popup.headerHeight - QuickActionsView.viewHeight,
+            width: size.width,
+            height: QuickActionsView.viewHeight
+        )
         
         if let view = view {
             self.body.documentView = view
@@ -288,6 +297,7 @@ internal class PopupView: NSView {
     
     internal func appear() {
         self.view?.appear()
+        self.quickActionsView.reloadButtons()
         
         self.display()
         self.body.subviews.first?.display()
@@ -311,7 +321,7 @@ internal class PopupView: NSView {
         var isScrollVisible: Bool = false
         var windowSize: NSSize = NSSize(
             width: size.width + (Constants.Popup.margins*2),
-            height: size.height + Constants.Popup.headerHeight + (Constants.Popup.margins*2)
+            height: size.height + Constants.Popup.headerHeight + QuickActionsView.viewHeight + (Constants.Popup.margins*2)
         )
         let h0 = self.containerHeight ?? 0
         
@@ -331,8 +341,14 @@ internal class PopupView: NSView {
         self.resizeBody(windowSize, scrollVisible: isScrollVisible)
         self.header.setFrameOrigin(NSPoint(
             x: self.header.frame.origin.x,
-            y: self.body.frame.height + (Constants.Popup.margins*2)
+            y: self.body.frame.height + QuickActionsView.viewHeight + (Constants.Popup.margins*2)
         ))
+        self.quickActionsView.frame = NSRect(
+            x: 0,
+            y: self.body.frame.height + (Constants.Popup.margins*2),
+            width: windowSize.width,
+            height: QuickActionsView.viewHeight
+        )
         
         if let documentView = self.body.documentView {
             let diff = h0 - (self.body.documentView?.frame.height ?? 0)
@@ -350,7 +366,7 @@ internal class PopupView: NSView {
             x: Constants.Popup.margins - (isRTL ? offset : 0),
             y: Constants.Popup.margins,
             width: windowSize.width - (Constants.Popup.margins*2) + offset,
-            height: windowSize.height - Constants.Popup.headerHeight - (Constants.Popup.margins*2)
+            height: windowSize.height - Constants.Popup.headerHeight - QuickActionsView.viewHeight - (Constants.Popup.margins*2)
         )
     }
 }

@@ -103,6 +103,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {
+        QuickActionsManager.shared.cleanup()
         modules.forEach{ $0.terminate() }
         SystemStats.shared.terminate()
     }
