@@ -29,6 +29,9 @@ public class QuickActionButton: NSButton {
         label.drawsBackground = false
         label.alignment = .center
         label.font = NSFont.systemFont(ofSize: 11, weight: .medium)
+        label.lineBreakMode = .byTruncatingTail
+        label.maximumNumberOfLines = 1
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -78,6 +81,8 @@ public class QuickActionButton: NSButton {
             self.iconImageView.widthAnchor.constraint(equalToConstant: 14),
             self.iconImageView.heightAnchor.constraint(equalToConstant: 14),
             self.contentStack.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            self.contentStack.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: 2),
+            self.contentStack.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -2),
             self.contentStack.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             self.heightAnchor.constraint(equalToConstant: 26)
         ])
@@ -107,10 +112,8 @@ public class QuickActionButton: NSButton {
     }
     
     public override func hitTest(_ point: NSPoint) -> NSView? {
-        if self.bounds.contains(point) {
-            return self
-        }
-        return super.hitTest(point)
+        // AppKit supplies superview coordinates. Keep child labels/images from taking the click.
+        return super.hitTest(point) == nil ? nil : self
     }
     
     public override func updateTrackingAreas() {
@@ -158,7 +161,8 @@ public class QuickActionsView: NSView {
     
     public init() {
         super.init(frame: NSRect(x: 0, y: 0, width: Constants.Popup.width, height: QuickActionsView.viewHeight))
-        self.translatesAutoresizingMaskIntoConstraints = false
+        // PopupView sets this container's frame; only its children use Auto Layout.
+        self.translatesAutoresizingMaskIntoConstraints = true
         self.setupViews()
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleActionsChanged), name: .quickActionsChanged, object: nil)
