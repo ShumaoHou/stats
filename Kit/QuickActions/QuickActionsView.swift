@@ -21,31 +21,6 @@ public class QuickActionButton: NSButton {
         return view
     }()
     
-    private let titleLabel: NSTextField = {
-        let label = NSTextField(labelWithString: "")
-        label.isEditable = false
-        label.isSelectable = false
-        label.isBezeled = false
-        label.drawsBackground = false
-        label.alignment = .center
-        label.font = NSFont.systemFont(ofSize: 11, weight: .medium)
-        label.lineBreakMode = .byTruncatingTail
-        label.maximumNumberOfLines = 1
-        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let contentStack: NSStackView = {
-        let stack = NSStackView()
-        stack.orientation = .horizontal
-        stack.alignment = .centerY
-        stack.distribution = .fill
-        stack.spacing = 5
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        return stack
-    }()
-    
     public init(item: QuickActionItem) {
         self.item = item
         super.init(frame: NSRect(x: 0, y: 0, width: 0, height: 26))
@@ -56,7 +31,10 @@ public class QuickActionButton: NSButton {
         self.bezelStyle = .regularSquare
         self.isBordered = false
         self.title = ""
-        self.toolTip = item.toolTip
+        self.toolTip = item.title + "\n" + item.toolTip
+        self.setAccessibilityLabel(item.title)
+        self.setAccessibilityHelp(item.toolTip)
+        self.setAccessibilityRole(item.isToggle ? .checkBox : .button)
         self.target = self
         self.action = #selector(self.buttonClicked)
         
@@ -69,21 +47,14 @@ public class QuickActionButton: NSButton {
     }
     
     private func setupViews() {
-        self.addSubview(self.contentStack)
-        
-        self.iconImageView.image = iconFromSymbol(name: self.item.iconName, scale: .small)
-        self.titleLabel.stringValue = self.item.title
-        
-        self.contentStack.addArrangedSubview(self.iconImageView)
-        self.contentStack.addArrangedSubview(self.titleLabel)
-        
+        self.addSubview(self.iconImageView)
+        self.iconImageView.image = iconFromSymbol(name: self.item.iconName, scale: .large)
+        self.iconImageView.setAccessibilityElement(false)
         NSLayoutConstraint.activate([
-            self.iconImageView.widthAnchor.constraint(equalToConstant: 14),
-            self.iconImageView.heightAnchor.constraint(equalToConstant: 14),
-            self.contentStack.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            self.contentStack.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: 2),
-            self.contentStack.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -2),
-            self.contentStack.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            self.iconImageView.widthAnchor.constraint(equalToConstant: 16),
+            self.iconImageView.heightAnchor.constraint(equalToConstant: 16),
+            self.iconImageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            self.iconImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             self.heightAnchor.constraint(equalToConstant: 26)
         ])
     }
@@ -92,16 +63,16 @@ public class QuickActionButton: NSButton {
         self.isEnabled = self.item.isAvailable()
         self.alphaValue = self.isEnabled ? 1 : 0.5
         let active = self.item.isEnabled()
+        self.state = active ? .on : .off
+        self.setAccessibilityValue(self.item.isToggle ? NSNumber(value: active) : nil)
         
         if active {
             self.layer?.backgroundColor = NSColor.controlAccentColor.cgColor
             self.iconImageView.contentTintColor = .white
-            self.titleLabel.textColor = .white
         } else {
             let bgAlpha: CGFloat = self.isHovered ? (isDarkMode ? 0.16 : 0.10) : (isDarkMode ? 0.08 : 0.05)
             self.layer?.backgroundColor = (isDarkMode ? NSColor.white : NSColor.black).withAlphaComponent(bgAlpha).cgColor
             self.iconImageView.contentTintColor = isDarkMode ? .white : .labelColor
-            self.titleLabel.textColor = isDarkMode ? .white : .labelColor
         }
     }
     
@@ -115,7 +86,7 @@ public class QuickActionButton: NSButton {
     }
     
     public override func hitTest(_ point: NSPoint) -> NSView? {
-        // AppKit supplies superview coordinates. Keep child labels/images from taking the click.
+        // AppKit supplies superview coordinates. Keep the icon from taking the click.
         return super.hitTest(point) == nil ? nil : self
     }
     

@@ -586,4 +586,15 @@
 "Administrator authorization was cancelled or the sleep setting could not be changed." = "管理员授权已取消，或系统休眠设置更改失败。";
 "The sleep setting could not be verified. Click the lid button again to restore it before quitting." = "无法确认系统休眠设置。请再次点击合盖按钮恢复设置后再退出。";
 "Click the lid button again to restore the original sleep setting." = "请再次点击合盖按钮，恢复开启前的休眠设置。";
+"Lock screen" = "锁屏";
+"Low Power Mode" = "省电模式";
+"Lock this Mac. Accessibility permission may be required." = "立即锁定此 Mac，可能需要辅助功能权限。";
+"Toggle Low Power Mode for battery and power adapter. Kept after quitting Stats." = "切换电池和接电时的省电模式，退出 Stats 后保留设置。";
+"Could not lock screen" = "无法锁屏";
+"Could not change Low Power Mode" = "无法更改省电模式";
+"Allow Stats in System Settings > Privacy & Security > Accessibility, then click Lock screen again." = "请在系统设置 > 隐私与安全性 > 辅助功能中允许 Stats，然后再次点击锁屏。";
+"The system lock shortcut could not be sent." = "无法发送系统锁屏快捷键。";
+"Low Power Mode is unavailable on this Mac or its settings could not be read." = "此 Mac 不支持省电模式，或无法读取相关设置。";
+"Administrator authorization was cancelled or Low Power Mode could not be changed." = "管理员授权已取消，或省电模式更改失败。";
+"Low Power Mode could not be verified for all power sources. Check the system Battery or Energy settings." = "无法确认所有电源状态下的省电模式，请检查系统的电池或能源设置。";
 

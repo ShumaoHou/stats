@@ -586,3 +586,14 @@
 "Administrator authorization was cancelled or the sleep setting could not be changed." = "Administrator authorization was cancelled or the sleep setting could not be changed.";
 "The sleep setting could not be verified. Click the lid button again to restore it before quitting." = "The sleep setting could not be verified. Click the lid button again to restore it before quitting.";
 "Click the lid button again to restore the original sleep setting." = "Click the lid button again to restore the original sleep setting.";
+"Lock screen" = "Lock screen";
+"Low Power Mode" = "Low Power Mode";
+"Lock this Mac. Accessibility permission may be required." = "Lock this Mac. Accessibility permission may be required.";
+"Toggle Low Power Mode for battery and power adapter. Kept after quitting Stats." = "Toggle Low Power Mode for battery and power adapter. Kept after quitting Stats.";
+"Could not lock screen" = "Could not lock screen";
+"Could not change Low Power Mode" = "Could not change Low Power Mode";
+"Allow Stats in System Settings > Privacy & Security > Accessibility, then click Lock screen again." = "Allow Stats in System Settings > Privacy & Security > Accessibility, then click Lock screen again.";
+"The system lock shortcut could not be sent." = "The system lock shortcut could not be sent.";
+"Low Power Mode is unavailable on this Mac or its settings could not be read." = "Low Power Mode is unavailable on this Mac or its settings could not be read.";
+"Administrator authorization was cancelled or Low Power Mode could not be changed." = "Administrator authorization was cancelled or Low Power Mode could not be changed.";
+"Low Power Mode could not be verified for all power sources. Check the system Battery or Energy settings." = "Low Power Mode could not be verified for all power sources. Check the system Battery or Energy settings.";

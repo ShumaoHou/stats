@@ -21,24 +21,39 @@ public class QuickActionsManager {
     
     private var displaySleepAssertionID: IOPMAssertionID = 0
     private let clamshell: ClamshellSleepController
+    private let lowPower: LowPowerModeController
+    private let screenLocker: ScreenLocker
+    private var powerStateObserver: NSObjectProtocol?
     private let presentError: (String, String) -> Void
+    private var isPowerOperationInProgress: Bool { self.clamshell.isBusy || self.lowPower.isBusy }
 
     public private(set) var isDisplaySleepPrevented: Bool = false
     public var isClamshellSleepPrevented: Bool { self.clamshell.isEnabled }
+    public var isLowPowerModeEnabled: Bool { self.lowPower.isEnabled }
     public private(set) var isPreparingForExit = false
     public private(set) var isExitReady = false
     
     public var actions: [QuickActionItem] = []
     
     internal init(clamshell: ClamshellSleepController = ClamshellSleepController(),
+                  lowPower: LowPowerModeController = LowPowerModeController(), screenLocker: ScreenLocker = ScreenLocker(),
                   presentError: @escaping (String, String) -> Void = { showAlert($0, $1, .warning) }) {
         self.clamshell = clamshell
+        self.lowPower = lowPower
+        self.screenLocker = screenLocker
         self.presentError = presentError
         self.clamshell.onChange = { NotificationCenter.default.post(name: .quickActionsChanged, object: nil) }
+        self.lowPower.onChange = { NotificationCenter.default.post(name: .quickActionsChanged, object: nil) }
+        if #available(macOS 12.0, *) {
+            self.powerStateObserver = NotificationCenter.default.addObserver(forName: .NSProcessInfoPowerStateDidChange, object: nil, queue: .main) { [weak self] _ in
+                self?.lowPower.onChange?()
+            }
+        }
         self.setupDefaultActions()
     }
     
     deinit {
+        if let observer = self.powerStateObserver { NotificationCenter.default.removeObserver(observer) }
         self.cleanup()
     }
     
@@ -66,7 +81,7 @@ public class QuickActionsManager {
                 iconName: "laptopcomputer",
                 isToggle: true,
                 isEnabled: { [weak self] in self?.isClamshellSleepPrevented ?? false },
-                isAvailable: { [weak self] in self?.isPreparingForExit == false && self?.clamshell.isBusy == false },
+                isAvailable: { [weak self] in self?.isPreparingForExit == false && self?.isPowerOperationInProgress == false },
                 action: { [weak self] _, completion in
                     guard let self = self else { completion(false); return }
                     self.toggleClamshellSleep(completion: completion)
@@ -83,6 +98,31 @@ public class QuickActionsManager {
                 action: { [weak self] _, completion in
                     self?.startScreenSaver()
                     completion(true)
+                }
+            ),
+            QuickActionItem(
+                id: "lock_screen",
+                title: localizedString("Lock screen"),
+                toolTip: localizedString("Lock this Mac. Accessibility permission may be required."),
+                iconName: "lock.fill",
+                isToggle: false,
+                isAvailable: { [weak self] in self?.isPreparingForExit == false },
+                action: { [weak self] _, completion in
+                    guard let self = self else { completion(false); return }
+                    self.lockScreen(completion: completion)
+                }
+            ),
+            QuickActionItem(
+                id: "low_power_mode",
+                title: localizedString("Low Power Mode"),
+                toolTip: localizedString("Toggle Low Power Mode for battery and power adapter. Kept after quitting Stats."),
+                iconName: "leaf.fill",
+                isToggle: true,
+                isEnabled: { [weak self] in self?.isLowPowerModeEnabled ?? false },
+                isAvailable: { [weak self] in self?.isPreparingForExit == false && self?.isPowerOperationInProgress == false },
+                action: { [weak self] _, completion in
+                    guard let self = self else { completion(false); return }
+                    self.toggleLowPowerMode(completion: completion)
                 }
             )
         ]
@@ -134,7 +174,7 @@ public class QuickActionsManager {
     // MARK: - 2. Prevent Clamshell Sleep (合盖不休眠)
     
     public func toggleClamshellSleep(completion: ((Bool) -> Void)? = nil) {
-        guard !self.isPreparingForExit, !self.clamshell.isBusy else {
+        guard !self.isPreparingForExit, !self.isPowerOperationInProgress else {
             completion?(self.isClamshellSleepPrevented)
             return
         }
@@ -157,7 +197,7 @@ public class QuickActionsManager {
             DispatchQueue.main.async { self.prepareForExit(completion: completion) }
             return
         }
-        guard !self.isPreparingForExit else {
+        guard !self.isPreparingForExit, !self.lowPower.isBusy else {
             DispatchQueue.main.async { completion(.failure(SleepControlError.busy)) }
             return
         }
@@ -206,6 +246,30 @@ public class QuickActionsManager {
         }
     }
     
+    // MARK: - Lock Screen & Low Power Mode
+
+    public func lockScreen(completion: ((Bool) -> Void)? = nil) {
+        guard !self.isPreparingForExit else { completion?(false); return }
+        do {
+            try self.screenLocker.lock()
+            NSApplication.shared.windows.filter { $0 is NSPanel }.forEach { $0.setIsVisible(false) }
+            completion?(true)
+        } catch {
+            completion?(false)
+            self.presentError(localizedString("Could not lock screen"), error.localizedDescription)
+        }
+    }
+
+    public func toggleLowPowerMode(completion: ((Bool) -> Void)? = nil) {
+        guard !self.isPreparingForExit, !self.isPowerOperationInProgress else { completion?(self.isLowPowerModeEnabled); return }
+        self.lowPower.toggle { result in
+            completion?(self.isLowPowerModeEnabled)
+            if case .failure(let error) = result {
+                self.presentError(localizedString("Could not change Low Power Mode"), error.localizedDescription)
+            }
+        }
+    }
+
     // MARK: - Cleanup
     
     /// Privileged restoration must finish in prepareForExit, never in deinit or willTerminate.

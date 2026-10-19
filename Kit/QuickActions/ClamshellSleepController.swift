@@ -122,11 +122,11 @@ internal final class ClamshellSleepController {
 
 /// No shell/PATH fallback, no retained credentials, and no idle-sleep assertion masquerading as lid protection.
 internal final class PmsetSleepSettings: SleepSettings {
-    typealias Command = (String, [String]) throws -> (status: Int32, output: String)
+    typealias Command = QuickActionCommand.Runner
     private let command: Command
     private let queue = DispatchQueue(label: "eu.exelban.Stats.QuickActions.power", qos: .userInitiated)
 
-    init(command: @escaping Command = PmsetSleepSettings.runCommand) {
+    init(command: @escaping Command = QuickActionCommand.run) {
         self.command = command
     }
 
@@ -155,27 +155,6 @@ internal final class PmsetSleepSettings: SleepSettings {
     }
 
     static func parseSleepDisabled(_ text: String) -> Bool? {
-        let rows = text.split(whereSeparator: \.isNewline).map { $0.split(whereSeparator: \.isWhitespace) }
-        let settings = rows.filter { $0.first == "SleepDisabled" }
-        guard settings.count == 1, settings[0].count == 2 else { return nil }
-        switch settings[0][1] {
-        case "0": return false
-        case "1": return true
-        default: return nil
-        }
-    }
-
-    private static func runCommand(_ path: String, _ arguments: [String]) throws -> (status: Int32, output: String) {
-        let task = Process()
-        task.executableURL = URL(fileURLWithPath: path)
-        task.arguments = arguments
-        let pipe = Pipe()
-        task.standardOutput = pipe
-        task.standardError = pipe
-        try task.run()
-        // Drain while the process runs rather than waiting with a potentially full pipe.
-        let output = pipe.fileHandleForReading.readDataToEndOfFile()
-        task.waitUntilExit()
-        return (task.terminationStatus, String(decoding: output, as: UTF8.self))
+        QuickActionCommand.booleanSetting("SleepDisabled", in: text)
     }
 }

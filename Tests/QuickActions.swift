@@ -13,7 +13,15 @@ struct QuickActionsLayoutTests {
         NSApp.setActivationPolicy(.prohibited)
         let sleepTestsPassed = ClamshellSleepTests.run()
         let lifecycleTestsPassed = QuickActionsLifecycleTests.run()
+        let systemTestsPassed = QuickActionSystemTests.run()
         verifyUnavailableButton()
+        verifyToggleAppearance()
+        check(QuickActionsManager.shared.actions.map { $0.id } == ["keep_awake", "clamshell_sleep", "screensaver", "lock_screen", "low_power_mode"],
+              "The default strip must expose all five requested actions in order")
+        if Bundle.main.preferredLocalizations.first == "zh-Hans" {
+            check(Array(QuickActionsManager.shared.actions.suffix(2)).map { $0.title } == ["锁屏", "省电模式"],
+                  "New actions must have Chinese names instead of English fallbacks")
+        }
         QuickActionsManager.shared.actions = QuickActionsManager.shared.actions.map { original in
             var item = original
             item.action = { action, completion in
@@ -59,7 +67,7 @@ struct QuickActionsLayoutTests {
             }
         }
         print("QuickActions: \(checks - failures)/\(checks) checks passed (\(Bundle.main.preferredLocalizations.joined(separator: ",")))")
-        exit(failures == 0 && sleepTestsPassed && lifecycleTestsPassed ? 0 : 1)
+        exit(failures == 0 && sleepTestsPassed && lifecycleTestsPassed && systemTestsPassed ? 0 : 1)
     }
 
     private static func verifyUnavailableButton() {
@@ -79,6 +87,21 @@ struct QuickActionsLayoutTests {
         check(clicks == 1, "Queued clicks must recheck availability before running")
     }
 
+    private static func verifyToggleAppearance() {
+        var active = false
+        let item = QuickActionItem(id: "toggle", title: "Test toggle", toolTip: "Test help", iconName: "leaf.fill",
+                                   isToggle: true, isEnabled: { active }, action: { _, completion in completion(true) })
+        let button = QuickActionButton(item: item)
+        let inactiveColor = button.layer?.backgroundColor
+        active = true
+        button.updateState()
+        check(button.state == .on && button.layer?.backgroundColor != inactiveColor, "An active toggle must expose its state and highlight")
+        check(button.accessibilityValue() as? NSNumber == 1, "VoiceOver must receive the active toggle value")
+        active = false
+        button.updateState()
+        check(button.state == .off && button.accessibilityValue() as? NSNumber == 0, "VoiceOver must receive the inactive toggle value")
+    }
+
     private static func verifyLayout(root: NSView, bar: QuickActionsView) {
         // A constraint-driven strip without an external size collapses to 32×0.
         check(abs(bar.frame.width - root.bounds.width) < 1 && abs(bar.frame.height - 38) < 1,
@@ -90,21 +113,27 @@ struct QuickActionsLayoutTests {
                   "Strip must remain between the header and original content")
         }
         let buttons = descendants(bar).compactMap { $0 as? QuickActionButton }
-        check(buttons.count == 3, "Exactly three buttons must survive repeated opening")
+        check(buttons.count == 5, "Exactly five buttons must survive repeated opening")
         for (index, button) in buttons.enumerated() {
             let rect = button.convert(button.bounds, to: bar)
-            check(rect.width >= 60 && rect.height >= 24 && bar.bounds.contains(rect),
+            check(rect.width >= 36 && rect.height >= 24 && bar.bounds.contains(rect),
                   "Button \(index) must have a visible frame inside the strip; got \(rect)")
-            for label in descendants(button).compactMap({ $0 as? NSTextField }) {
-                check(!label.stringValue.isEmpty && label.bounds.width > 0, "Button \(index) must have a visible label")
-                if Bundle.main.preferredLocalizations.first == "zh-Hans" {
-                    let textWidth = label.cell!.cellSize.width
-                    check(label.bounds.width >= textWidth,
-                          "Chinese button \(index) title must fit without truncation: \(label.bounds.width) < \(textWidth)")
-                }
-                let labelRect = label.convert(label.bounds, to: button)
-                check(labelRect.minX >= -2 && labelRect.maxX <= button.bounds.maxX + 2,
-                      "Button \(index) text must not overflow into adjacent buttons; got \(labelRect)")
+            check(descendants(button).compactMap { $0 as? NSTextField }.isEmpty, "Icon-only buttons must not squeeze text into the row")
+            let item = QuickActionsManager.shared.actions[index]
+            check(button.toolTip?.contains(item.title) == true && button.accessibilityLabel() == item.title,
+                  "Each icon must retain its localized name in the tooltip and VoiceOver label")
+            let icons = descendants(button).compactMap { $0 as? NSImageView }
+            check(icons.count == 1 && (icons[0].image?.size.width ?? 0) > 0 && (icons[0].image?.size.height ?? 0) > 0,
+                  "Every action must have a real, nonempty icon")
+            if let icon = icons.first {
+                // SF Symbols include transparent typographic padding outside their Auto Layout alignment rect.
+                let iconRect = button.convert(icon.alignmentRect(forFrame: icon.frame), from: icon.superview)
+                check(iconRect.width >= 14 && abs(iconRect.midX - button.bounds.midX) < 1 && button.bounds.contains(iconRect),
+                      "Symbol content \(item.id) must be centered and unclipped: \(iconRect)")
+            }
+            if index > 0 {
+                let previous = buttons[index - 1].convert(buttons[index - 1].bounds, to: bar)
+                check(rect.minX >= previous.maxX + 4 && abs(rect.midY - previous.midY) < 1, "Five buttons must stay in a non-overlapping single row")
             }
             // hitTest receives a point in the superview's coordinates, not in the button's bounds.
             for fraction: CGFloat in [0.15, 0.5, 0.85] {

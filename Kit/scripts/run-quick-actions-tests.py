@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Run real Kit/AppKit layout tests with macOS Command Line Tools (no Xcode required).
+"""Run Kit/AppKit and power-control tests with macOS Command Line Tools (no Xcode required).
 
 Optional: --screenshots /path/to/output saves English/Chinese, light/dark renders.
-Only test callbacks are clicked; no power settings, screen savers or helpers run.
+System mutations, lock key events, installer/exit effects and UI actions are substituted.
 """
 import argparse
 import os
@@ -72,7 +72,8 @@ def run():
             *map(str, sorted((ROOT / "Kit").rglob("*.swift"))),
             str(ROOT / "SMC/smc.swift"), str(ROOT / "SMC/Helper/protocol.swift"),
             str(ROOT / "Tests/QuickActions.swift"), str(ROOT / "Tests/ClamshellSleep.swift"),
-            str(ROOT / "Tests/QuickActionsLifecycle.swift"), str(build / "LifecycleUnderTest.swift"), str(build / "lldb.o"),
+            str(ROOT / "Tests/QuickActionsLifecycle.swift"), str(ROOT / "Tests/QuickActionSystemTests.swift"),
+            str(build / "LifecycleUnderTest.swift"), str(build / "lldb.o"),
             "-L", str(ROOT / "Kit/lldb"), "-lleveldb", "-lc++", "-o", str(binary),
         ], check=True, timeout=240)
         for language in ("en", "zh-Hans"):

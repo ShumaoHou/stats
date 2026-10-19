@@ -12,6 +12,8 @@
 		FA0100042CE0000100000002 /* QuickActionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0100032CE0000100000002 /* QuickActionsManager.swift */; };
 		FA0100062CE0000100000003 /* QuickActionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0100052CE0000100000003 /* QuickActionsView.swift */; };
 		FA0100092CE0000100000005 /* ClamshellSleepController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0100082CE0000100000005 /* ClamshellSleepController.swift */; };
+		FA01000B2CE0000100000006 /* QuickActionSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA01000A2CE0000100000006 /* QuickActionSystem.swift */; };
+		FA01000D2CE0000100000007 /* LowPowerModeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA01000C2CE0000100000007 /* LowPowerModeController.swift */; };
 		5C038CF62D86EE8A00516809 /* SystemStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C038CF52D86EE8700516809 /* SystemStats.swift */; };
 		5C044F7A2B3DE6F3005F6951 /* portal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C044F792B3DE6F3005F6951 /* portal.swift */; };
 		5C0A2A8A292A5B4D009B4C1F /* SMJobBlessUtil.py in Resources */ = {isa = PBXBuildFile; fileRef = 5C0A2A89292A5B4D009B4C1F /* SMJobBlessUtil.py */; };
@@ -550,6 +552,8 @@
 		FA0100032CE0000100000002 /* QuickActionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickActionsManager.swift; sourceTree = "<group>"; };
 		FA0100052CE0000100000003 /* QuickActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickActionsView.swift; sourceTree = "<group>"; };
 		FA0100082CE0000100000005 /* ClamshellSleepController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClamshellSleepController.swift; sourceTree = "<group>"; };
+		FA01000A2CE0000100000006 /* QuickActionSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickActionSystem.swift; sourceTree = "<group>"; };
+		FA01000C2CE0000100000007 /* LowPowerModeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LowPowerModeController.swift; sourceTree = "<group>"; };
 		40BE2B202745D63800AE9396 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
 		47665544298DC92F00F7B709 /* sk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sk; path = sk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4921436D25319699000A1C47 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1130,6 +1134,8 @@
 				FA0100032CE0000100000002 /* QuickActionsManager.swift */,
 				FA0100052CE0000100000003 /* QuickActionsView.swift */,
 				FA0100082CE0000100000005 /* ClamshellSleepController.swift */,
+				FA01000A2CE0000100000006 /* QuickActionSystem.swift */,
+				FA01000C2CE0000100000007 /* LowPowerModeController.swift */,
 			);
 			path = QuickActions;
 			sourceTree = "<group>";
@@ -2264,6 +2270,8 @@
 				FA0100042CE0000100000002 /* QuickActionsManager.swift in Sources */,
 				FA0100062CE0000100000003 /* QuickActionsView.swift in Sources */,
 				FA0100092CE0000100000005 /* ClamshellSleepController.swift in Sources */,
+				FA01000B2CE0000100000006 /* QuickActionSystem.swift in Sources */,
+				FA01000D2CE0000100000007 /* LowPowerModeController.swift in Sources */,
 				5C621D822B4770D6004ED7AF /* process.swift in Sources */,
 				9AD7F866266F759200E5F863 /* smc.swift in Sources */,
 				9A2847612666AA2700EC1F6D /* PieChart.swift in Sources */,
