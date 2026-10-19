@@ -102,6 +102,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         self.startTS = Date()
     }
     
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        let actions = QuickActionsManager.shared
+        if actions.isExitReady { return .terminateNow }
+        if actions.isPreparingForExit { return .terminateCancel }
+        actions.prepareForExit { result in
+            switch result {
+            case .success:
+                sender.reply(toApplicationShouldTerminate: true)
+            case .failure(let error):
+                sender.reply(toApplicationShouldTerminate: false)
+                showAlert(localizedString("Unable to restore sleep settings"), error.localizedDescription, .warning)
+            }
+        }
+        return .terminateLater
+    }
+
     func applicationWillTerminate(_ aNotification: Notification) {
         QuickActionsManager.shared.cleanup()
         modules.forEach{ $0.terminate() }

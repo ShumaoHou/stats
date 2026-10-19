@@ -11,6 +11,9 @@ struct QuickActionsLayoutTests {
     static func main() throws {
         _ = NSApplication.shared
         NSApp.setActivationPolicy(.prohibited)
+        let sleepTestsPassed = ClamshellSleepTests.run()
+        let lifecycleTestsPassed = QuickActionsLifecycleTests.run()
+        verifyUnavailableButton()
         QuickActionsManager.shared.actions = QuickActionsManager.shared.actions.map { original in
             var item = original
             item.action = { action, completion in
@@ -56,7 +59,24 @@ struct QuickActionsLayoutTests {
             }
         }
         print("QuickActions: \(checks - failures)/\(checks) checks passed (\(Bundle.main.preferredLocalizations.joined(separator: ",")))")
-        exit(failures == 0 ? 0 : 1)
+        exit(failures == 0 && sleepTestsPassed && lifecycleTestsPassed ? 0 : 1)
+    }
+
+    private static func verifyUnavailableButton() {
+        var available = false
+        var clicks = 0
+        let item = QuickActionItem(id: "test", title: "Test", toolTip: "Test", iconName: "laptopcomputer",
+                                   isAvailable: { available }, action: { _, completion in clicks += 1; completion(true) })
+        let button = QuickActionButton(item: item)
+        button.performClick(nil)
+        check(!button.isEnabled && clicks == 0, "Unavailable action must be disabled and not run")
+        available = true
+        button.updateState()
+        button.performClick(nil)
+        check(button.isEnabled && clicks == 1, "Button becomes available after completion")
+        available = false
+        button.performClick(nil)
+        check(clicks == 1, "Queued clicks must recheck availability before running")
     }
 
     private static func verifyLayout(root: NSView, bar: QuickActionsView) {

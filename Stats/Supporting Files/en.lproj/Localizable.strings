@@ -570,3 +570,19 @@
 "Login to System Stats to see your devices" = "Login to System Stats to see your devices";
 "Monitor HTTP, ICMP and custom endpoints" = "Monitor HTTP, ICMP and custom endpoints";
 "Monitor and control your Macs from anywhere. Sign in to your System Stats account to see all your devices and hosts in one place." = "Monitor and control your Macs from anywhere. Sign in to your System Stats account to see all your devices and hosts in one place.";
+
+// Quick Actions
+"Keep awake" = "Keep awake";
+"Prevent screen from sleeping" = "Prevent screen from sleeping";
+"No sleep on lid" = "No sleep on lid";
+"Prevent sleep when lid is closed" = "Prevent sleep when lid is closed";
+"Screensaver" = "Screensaver";
+"Start screen saver" = "Start screen saver";
+"Could not change lid sleep protection" = "Could not change lid sleep protection";
+"Unable to restore sleep settings" = "Could not restore sleep settings; exit cancelled";
+"Could not restart Stats" = "Could not restart Stats";
+"A power operation is in progress. Complete or cancel authorization, then try again." = "A power operation is in progress. Complete or cancel authorization, then try again.";
+"Could not read the system sleep setting. No safe change can be confirmed." = "Could not read the system sleep setting. No safe change can be confirmed.";
+"Administrator authorization was cancelled or the sleep setting could not be changed." = "Administrator authorization was cancelled or the sleep setting could not be changed.";
+"The sleep setting could not be verified. Click the lid button again to restore it before quitting." = "The sleep setting could not be verified. Click the lid button again to restore it before quitting.";
+"Click the lid button again to restore the original sleep setting." = "Click the lid button again to restore the original sleep setting.";

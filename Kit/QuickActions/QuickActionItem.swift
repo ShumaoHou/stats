@@ -16,6 +16,7 @@ public struct QuickActionItem {
     public let iconName: String
     public let isToggle: Bool
     public var isEnabled: () -> Bool
+    public var isAvailable: () -> Bool
     public var action: (_ item: QuickActionItem, _ completion: @escaping (Bool) -> Void) -> Void
     
     public init(
@@ -25,6 +26,7 @@ public struct QuickActionItem {
         iconName: String,
         isToggle: Bool = true,
         isEnabled: @escaping () -> Bool = { false },
+        isAvailable: @escaping () -> Bool = { true },
         action: @escaping (_ item: QuickActionItem, _ completion: @escaping (Bool) -> Void) -> Void
     ) {
         self.id = id
@@ -33,6 +35,7 @@ public struct QuickActionItem {
         self.iconName = iconName
         self.isToggle = isToggle
         self.isEnabled = isEnabled
+        self.isAvailable = isAvailable
         self.action = action
     }
 }

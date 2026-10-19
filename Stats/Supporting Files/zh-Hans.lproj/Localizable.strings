@@ -578,4 +578,12 @@
 "Prevent sleep when lid is closed" = "合上屏幕时阻止系统休眠";
 "Screensaver" = "屏幕保护";
 "Start screen saver" = "立即启动屏幕保护程序";
+"Could not change lid sleep protection" = "无法更改合盖防休眠设置";
+"Unable to restore sleep settings" = "无法恢复休眠设置，已取消退出";
+"Could not restart Stats" = "无法重新启动 Stats";
+"A power operation is in progress. Complete or cancel authorization, then try again." = "正在处理电源设置，请先完成或取消授权后重试。";
+"Could not read the system sleep setting. No safe change can be confirmed." = "无法读取系统休眠设置，不能确认已安全更改。";
+"Administrator authorization was cancelled or the sleep setting could not be changed." = "管理员授权已取消，或系统休眠设置更改失败。";
+"The sleep setting could not be verified. Click the lid button again to restore it before quitting." = "无法确认系统休眠设置。请再次点击合盖按钮恢复设置后再退出。";
+"Click the lid button again to restore the original sleep setting." = "请再次点击合盖按钮，恢复开启前的休眠设置。";
 

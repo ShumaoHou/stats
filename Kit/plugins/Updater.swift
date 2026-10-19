@@ -167,6 +167,21 @@ public class Updater {
     }
     
     public func install(path: String, completion: @escaping (_ error: String?) -> Void) {
+        QuickActionsManager.shared.prepareForExit { result in
+            if case .failure(let error) = result {
+                completion(localizedString("Unable to restore sleep settings") + ": " + error.localizedDescription)
+                return
+            }
+            DispatchQueue.global(qos: .userInitiated).async {
+                self.installAfterSleepRestored(path: path) { error in
+                    QuickActionsManager.shared.cancelExitPreparation()
+                    completion(error)
+                }
+            }
+        }
+    }
+
+    private func installAfterSleepRestored(path: String, completion: @escaping (_ error: String?) -> Void) {
         let dmg = path.replacingOccurrences(of: "file://", with: "")
         let pwd = Bundle.main.bundleURL.deletingLastPathComponent().path
         

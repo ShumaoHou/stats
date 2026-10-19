@@ -20,14 +20,21 @@ public class QuickActionsManager {
     // MARK: - Assertions & State
     
     private var displaySleepAssertionID: IOPMAssertionID = 0
-    private var systemSleepAssertionID: IOPMAssertionID = 0
-    
+    private let clamshell: ClamshellSleepController
+    private let presentError: (String, String) -> Void
+
     public private(set) var isDisplaySleepPrevented: Bool = false
-    public private(set) var isClamshellSleepPrevented: Bool = false
+    public var isClamshellSleepPrevented: Bool { self.clamshell.isEnabled }
+    public private(set) var isPreparingForExit = false
+    public private(set) var isExitReady = false
     
     public var actions: [QuickActionItem] = []
     
-    private init() {
+    internal init(clamshell: ClamshellSleepController = ClamshellSleepController(),
+                  presentError: @escaping (String, String) -> Void = { showAlert($0, $1, .warning) }) {
+        self.clamshell = clamshell
+        self.presentError = presentError
+        self.clamshell.onChange = { NotificationCenter.default.post(name: .quickActionsChanged, object: nil) }
         self.setupDefaultActions()
     }
     
@@ -46,6 +53,7 @@ public class QuickActionsManager {
                 iconName: "sun.max.fill",
                 isToggle: true,
                 isEnabled: { [weak self] in self?.isDisplaySleepPrevented ?? false },
+                isAvailable: { [weak self] in self?.isPreparingForExit == false },
                 action: { [weak self] _, completion in
                     guard let self = self else { completion(false); return }
                     self.toggleDisplaySleep(completion: completion)
@@ -58,6 +66,7 @@ public class QuickActionsManager {
                 iconName: "laptopcomputer",
                 isToggle: true,
                 isEnabled: { [weak self] in self?.isClamshellSleepPrevented ?? false },
+                isAvailable: { [weak self] in self?.isPreparingForExit == false && self?.clamshell.isBusy == false },
                 action: { [weak self] _, completion in
                     guard let self = self else { completion(false); return }
                     self.toggleClamshellSleep(completion: completion)
@@ -70,6 +79,7 @@ public class QuickActionsManager {
                 iconName: "sparkles.tv",
                 isToggle: false,
                 isEnabled: { false },
+                isAvailable: { [weak self] in self?.isPreparingForExit == false },
                 action: { [weak self] _, completion in
                     self?.startScreenSaver()
                     completion(true)
@@ -81,6 +91,7 @@ public class QuickActionsManager {
     // MARK: - 1. Prevent Screen Sleep (保持屏幕亮屏)
     
     public func toggleDisplaySleep(completion: ((Bool) -> Void)? = nil) {
+        guard !self.isPreparingForExit else { completion?(self.isDisplaySleepPrevented); return }
         if self.isDisplaySleepPrevented {
             self.stopPreventingDisplaySleep()
         } else {
@@ -123,106 +134,62 @@ public class QuickActionsManager {
     // MARK: - 2. Prevent Clamshell Sleep (合盖不休眠)
     
     public func toggleClamshellSleep(completion: ((Bool) -> Void)? = nil) {
-        if self.isClamshellSleepPrevented {
-            self.stopPreventingClamshellSleep()
-            completion?(false)
-            NotificationCenter.default.post(name: .quickActionsChanged, object: nil)
-        } else {
-            self.startPreventingClamshellSleep { [weak self] success in
-                guard let self = self else { return }
-                completion?(self.isClamshellSleepPrevented)
-                NotificationCenter.default.post(name: .quickActionsChanged, object: nil)
-            }
+        guard !self.isPreparingForExit, !self.clamshell.isBusy else {
+            completion?(self.isClamshellSleepPrevented)
+            return
         }
-    }
-    
-    private func startPreventingClamshellSleep(completion: @escaping (Bool) -> Void) {
-        // 1. 创建 IOKit 系统休眠断言作为基础保护
-        if self.systemSleepAssertionID == 0 {
-            let reason = "Stats: Prevent System Sleep On Clamshell" as CFString
-            let res = IOPMAssertionCreateWithName(
-                kIOPMAssertionTypePreventSystemSleep as CFString,
-                IOPMAssertionLevel(kIOPMAssertionLevelOn),
-                reason,
-                &self.systemSleepAssertionID
-            )
-            if res != kIOReturnSuccess {
-                self.systemSleepAssertionID = 0
-            }
-        }
-        
-        // 2. 尝试执行系统 pmset disablesleep 1
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let self = self else { return }
-            
-            // 先尝试无需密码执行
-            let status = self.executePmset(disablesleep: true)
-            
-            DispatchQueue.main.async {
-                if status {
-                    self.isClamshellSleepPrevented = true
-                    completion(true)
-                } else {
-                    // 如果普通执行失败（需提权），但系统断言已创建，仍标记激活（在有外接电源/显示器时生效）
-                    self.isClamshellSleepPrevented = (self.systemSleepAssertionID != 0)
-                    completion(self.isClamshellSleepPrevented)
+        self.clamshell.toggle { result in
+            completion?(self.isClamshellSleepPrevented)
+            if case .failure(let error) = result {
+                var message = error.localizedDescription
+                if self.clamshell.needsRestoration {
+                    message += "\n" + localizedString("Click the lid button again to restore the original sleep setting.")
                 }
+                self.presentError(localizedString("Could not change lid sleep protection"), message)
             }
         }
     }
-    
-    private func stopPreventingClamshellSleep() {
-        // 1. 释放 IOKit 系统断言
-        if self.systemSleepAssertionID != 0 {
-            IOPMAssertionRelease(self.systemSleepAssertionID)
-            self.systemSleepAssertionID = 0
+
+    /// Retain the guard through restart/install side effects. Errors release it so the user can retry.
+    /// Completion is always deferred, allowing AppDelegate to return terminateLater first.
+    public func prepareForExit(completion: @escaping (Result<Void, Error>) -> Void) {
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async { self.prepareForExit(completion: completion) }
+            return
         }
-        
-        // 2. 恢复 pmset disablesleep 0
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            _ = self?.executePmset(disablesleep: false)
+        guard !self.isPreparingForExit else {
+            DispatchQueue.main.async { completion(.failure(SleepControlError.busy)) }
+            return
         }
-        
-        self.isClamshellSleepPrevented = false
-    }
-    
-    @discardableResult
-    private func executePmset(disablesleep: Bool) -> Bool {
-        let val = disablesleep ? "1" : "0"
-        
-        // 尝试直接通过 sh 调用
-        let directCommand = "pmset disablesleep \(val)"
-        let directProcess = Process()
-        directProcess.executableURL = URL(fileURLWithPath: "/bin/sh")
-        directProcess.arguments = ["-c", directCommand]
-        let pipe = Pipe()
-        directProcess.standardOutput = pipe
-        directProcess.standardError = pipe
-        
-        do {
-            try directProcess.run()
-            directProcess.waitUntilExit()
-            if directProcess.terminationStatus == 0 {
-                return true
+        self.isPreparingForExit = true
+        NotificationCenter.default.post(name: .quickActionsChanged, object: nil)
+        DispatchQueue.main.async {
+            self.clamshell.restore { result in
+                switch result {
+                case .success:
+                    self.isExitReady = true
+                case .failure:
+                    self.cancelExitPreparation()
+                }
+                completion(result)
             }
-        } catch {
-            // Ignore and fall through to AppleScript
         }
-        
-        // 如果普通执行返回非 0，则尝试通过 AppleScript 请求管理员权限执行
-        let scriptText = "do shell script \"pmset disablesleep \(val)\" with administrator privileges"
-        var errorDict: NSDictionary? = nil
-        if let script = NSAppleScript(source: scriptText) {
-            script.executeAndReturnError(&errorDict)
-            return errorDict == nil
+    }
+
+    public func cancelExitPreparation() {
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async { self.cancelExitPreparation() }
+            return
         }
-        
-        return false
+        self.isPreparingForExit = false
+        self.isExitReady = false
+        NotificationCenter.default.post(name: .quickActionsChanged, object: nil)
     }
     
     // MARK: - 3. Screen Saver (进入屏幕保护)
     
     public func startScreenSaver() {
+        guard !self.isPreparingForExit else { return }
         // 关闭当前打开的 popup 窗口
         let openedWindows = NSApplication.shared.windows.filter{ $0 is NSPanel }
         openedWindows.forEach{ $0.setIsVisible(false) }
@@ -241,10 +208,8 @@ public class QuickActionsManager {
     
     // MARK: - Cleanup
     
+    /// Privileged restoration must finish in prepareForExit, never in deinit or willTerminate.
     public func cleanup() {
         self.stopPreventingDisplaySleep()
-        if self.isClamshellSleepPrevented {
-            self.stopPreventingClamshellSleep()
-        }
     }
 }

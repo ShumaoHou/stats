@@ -1900,13 +1900,23 @@ public class PreferencesRow: NSStackView {
     }
 }
 
-public func restartApp(_ sender: Any, afterDelay seconds: TimeInterval = 0.5) -> Never {
-    let task = Process()
-    task.launchPath = "/bin/sh"
-    task.arguments = ["-c", "sleep \(seconds); open \"$1\"", "stats-restart", Bundle.main.bundlePath]
-    task.launch()
-    NSApp.terminate(sender)
-    exit(0)
+public func restartApp(_ sender: Any, afterDelay seconds: TimeInterval = 0.5) {
+    QuickActionsManager.shared.prepareForExit { result in
+        if case .failure(let error) = result {
+            showAlert(localizedString("Unable to restore sleep settings"), error.localizedDescription, .warning)
+            return
+        }
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/bin/sh")
+        task.arguments = ["-c", "sleep \(seconds); open \"$1\"", "stats-restart", Bundle.main.bundlePath]
+        do {
+            try task.run()
+            NSApp.terminate(sender)
+        } catch {
+            QuickActionsManager.shared.cancelExitPreparation()
+            showAlert(localizedString("Could not restart Stats"), error.localizedDescription, .warning)
+        }
+    }
 }
 
 public class StepperInput: NSStackView, NSTextFieldDelegate, PreferencesSwitchWith_p {

@@ -89,6 +89,8 @@ public class QuickActionButton: NSButton {
     }
     
     public func updateState() {
+        self.isEnabled = self.item.isAvailable()
+        self.alphaValue = self.isEnabled ? 1 : 0.5
         let active = self.item.isEnabled()
         
         if active {
@@ -104,6 +106,7 @@ public class QuickActionButton: NSButton {
     }
     
     @objc private func buttonClicked() {
+        guard self.item.isAvailable() else { return }
         self.item.action(self.item) { [weak self] _ in
             DispatchQueue.main.async {
                 self?.updateState()
