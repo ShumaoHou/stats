@@ -395,7 +395,8 @@ public class StackWidget: WidgetWrapper {
     }
 
     private func updateSliderValue(_ sender: NSSlider, value: String) {
-        guard let field = sender.superview?.arrangedSubviews.compactMap({ $0 as? NSTextField }).first else { return }
+        guard let view = sender.superview as? NSStackView,
+              let field = view.arrangedSubviews.compactMap({ $0 as? NSTextField }).first else { return }
         field.stringValue = value
     }
 }
