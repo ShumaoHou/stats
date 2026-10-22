@@ -229,6 +229,8 @@
 "Color of download" = "下载颜色";
 "Color of upload" = "上传颜色";
 "Monospaced font" = "等宽字体";
+"Text size" = "Text size";
+"Metric spacing" = "Metric spacing";
 "Reverse order" = "调转顺序";
 "Chart history" = "图表统计时长";
 "Default color" = "默认";
