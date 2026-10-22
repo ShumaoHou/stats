@@ -33,6 +33,8 @@ public class StackWidget: WidgetWrapper {
     private var fixedSizeState: Bool = false
     private var monospacedFontState: Bool = false
     private var alignmentState: String = "left"
+    private var textSizeState: Int = 10
+    private var groupSpacingState: Int = 0
     
     private var values: [Stack_t] = []
     private let textCache = WidgetTextCache(limit: 256)
@@ -72,6 +74,8 @@ public class StackWidget: WidgetWrapper {
             self.fixedSizeState = Store.shared.bool(key: "\(self.title)_\(self.type.rawValue)_size", defaultValue: self.fixedSizeState)
             self.monospacedFontState = Store.shared.bool(key: "\(self.title)_\(self.type.rawValue)_monospacedFont", defaultValue: self.monospacedFontState)
             self.alignmentState = Store.shared.string(key: "\(self.title)_\(self.type.rawValue)_alignment", defaultValue: self.alignmentState)
+            self.textSizeState = Store.shared.int(key: "\(self.title)_\(self.type.rawValue)_textSize", defaultValue: self.textSizeState)
+            self.groupSpacingState = Store.shared.int(key: "\(self.title)_\(self.type.rawValue)_groupSpacing", defaultValue: self.groupSpacingState)
         }
         
         self.orderTableView.getList = { [weak self] in
@@ -97,9 +101,11 @@ public class StackWidget: WidgetWrapper {
         
         var values: [Stack_t] = []
         var mode: StackMode = .auto
+        var groupSpacing: CGFloat = 0
         self.queue.sync {
             values = self.values
             mode = self.modeState
+            groupSpacing = CGFloat(self.groupSpacingState)
         }
         
         guard !values.isEmpty else {
@@ -129,8 +135,8 @@ public class StackWidget: WidgetWrapper {
                 totalWidth += width
                 
                 if num != 1 && (i/2) != num {
-                    x += Constants.Widget.spacing
-                    totalWidth += Constants.Widget.spacing
+                    x += groupSpacing
+                    totalWidth += groupSpacing
                 }
                 
                 i += 1
@@ -142,8 +148,8 @@ public class StackWidget: WidgetWrapper {
                 
                 // add margins between columns
                 if values.count != 1 && i != values.count {
-                    x += Constants.Widget.spacing
-                    totalWidth += Constants.Widget.spacing
+                    x += groupSpacing
+                    totalWidth += groupSpacing
                 }
             }
             
@@ -159,16 +165,18 @@ public class StackWidget: WidgetWrapper {
         var monospacedFontState: Bool = false
         var fixedSizeState: Bool = false
         var alignment: NSTextAlignment = .left
+        var textSize: CGFloat = 10
         self.queue.sync {
             monospacedFontState = self.monospacedFontState
             fixedSizeState = self.fixedSizeState
             alignment = self.alignment
+            textSize = CGFloat(self.textSizeState)
         }
         
-        let entry = self.textCache.entry(element.value, key: "one|\(monospacedFontState)|\(alignment.rawValue)") {
+        let entry = self.textCache.entry(element.value, key: "one|\(monospacedFontState)|\(alignment.rawValue)|\(textSize)") {
             let font: NSFont = monospacedFontState
-                ? NSFont.monospacedDigitSystemFont(ofSize: 13, weight: .regular)
-                : NSFont.systemFont(ofSize: 13, weight: .regular)
+                ? NSFont.monospacedDigitSystemFont(ofSize: textSize, weight: .regular)
+                : NSFont.systemFont(ofSize: textSize, weight: .regular)
             let style = NSMutableParagraphStyle()
             style.alignment = alignment
             return [
@@ -183,7 +191,7 @@ public class StackWidget: WidgetWrapper {
             width = entry.width.rounded(.up) + 2
         }
         
-        let rect = CGRect(x: x, y: (Constants.Widget.height-13)/2, width: width, height: 13)
+        let rect = CGRect(x: x, y: (Constants.Widget.height-textSize)/2, width: width, height: textSize)
         entry.string.draw(with: rect)
         
         return width
@@ -194,17 +202,19 @@ public class StackWidget: WidgetWrapper {
         var monospacedFontState: Bool = false
         var fixedSizeState: Bool = false
         var alignment: NSTextAlignment = .left
+        var textSize: CGFloat = 10
         self.queue.sync {
             monospacedFontState = self.monospacedFontState
             fixedSizeState = self.fixedSizeState
             alignment = self.alignment
+            textSize = CGFloat(self.textSizeState)
         }
         
-        let key = "two|\(monospacedFontState)|\(alignment.rawValue)"
+        let key = "two|\(monospacedFontState)|\(alignment.rawValue)|\(textSize)"
         let attributes: () -> [NSAttributedString.Key: Any] = {
             let font: NSFont = monospacedFontState
-                ? NSFont.monospacedDigitSystemFont(ofSize: 10, weight: .light)
-                : NSFont.systemFont(ofSize: 10, weight: .light)
+                ? NSFont.monospacedDigitSystemFont(ofSize: textSize, weight: .light)
+                : NSFont.systemFont(ofSize: textSize, weight: .light)
             let style = NSMutableParagraphStyle()
             style.alignment = alignment
             return [
@@ -277,6 +287,20 @@ public class StackWidget: WidgetWrapper {
                 action: #selector(self.toggleAlignment),
                 items: Alignments,
                 selected: self.alignmentState
+            )),
+            PreferencesRow(localizedString("Text size"), component: self.sliderView(
+                action: #selector(self.changeTextSize(_:)),
+                value: self.textSizeState,
+                min: 8,
+                max: 16,
+                suffix: "pt"
+            )),
+            PreferencesRow(localizedString("Metric spacing"), component: self.sliderView(
+                action: #selector(self.changeGroupSpacing(_:)),
+                value: self.groupSpacingState,
+                min: -8,
+                max: 20,
+                suffix: "pt"
             ))
         ]
         if self.title != "Clock" {
@@ -328,6 +352,51 @@ public class StackWidget: WidgetWrapper {
         }
         Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_alignment", value: key)
         self.display()
+    }
+
+    private func sliderView(action: Selector, value: Int, min: Double, max: Double, suffix: String) -> NSView {
+        let view = NSStackView()
+        view.orientation = .horizontal
+        view.spacing = 6
+        view.widthAnchor.constraint(equalToConstant: 195).isActive = true
+
+        let slider = NSSlider(value: Double(value), minValue: min, maxValue: max, target: self, action: action)
+        slider.controlSize = .small
+        slider.isContinuous = true
+        slider.translatesAutoresizingMaskIntoConstraints = false
+
+        let valueField = LabelField("\(value)\(suffix)")
+        valueField.alignment = .center
+        valueField.widthAnchor.constraint(equalToConstant: 42).isActive = true
+
+        view.addArrangedSubview(slider)
+        view.addArrangedSubview(valueField)
+        return view
+    }
+
+    @objc private func changeTextSize(_ sender: NSSlider) {
+        let value = Int(sender.doubleValue.rounded())
+        self.queue.sync {
+            self.textSizeState = value
+        }
+        self.updateSliderValue(sender, value: "\(value)pt")
+        Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_textSize", value: value)
+        self.display()
+    }
+
+    @objc private func changeGroupSpacing(_ sender: NSSlider) {
+        let value = Int(sender.doubleValue.rounded())
+        self.queue.sync {
+            self.groupSpacingState = value
+        }
+        self.updateSliderValue(sender, value: "\(value)pt")
+        Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_groupSpacing", value: value)
+        self.display()
+    }
+
+    private func updateSliderValue(_ sender: NSSlider, value: String) {
+        guard let field = sender.superview?.arrangedSubviews.compactMap({ $0 as? NSTextField }).first else { return }
+        field.stringValue = value
     }
 }
 
