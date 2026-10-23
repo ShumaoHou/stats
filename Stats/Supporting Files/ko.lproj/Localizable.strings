@@ -231,6 +231,7 @@
 "Monospaced font" = "고정폭 서체";
 "Text size" = "Text size";
 "Metric spacing" = "Metric spacing";
+"Widget width" = "Widget width";
 "Reverse order" = "역순"; // translategemma:4b
 "Chart history" = "차트 기록"; // translategemma:4b
 "Default color" = "기본"; // gemma4:31b

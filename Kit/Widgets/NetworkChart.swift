@@ -148,7 +148,6 @@ public class NetworkChart: WidgetWrapper {
             let letterHeight = self.frame.height / 3
             let letterWidth: CGFloat = 6.0
             let labelSize = self.appearanceTextSize(defaultValue: 7)
-            let spacing = self.appearanceSpacing(defaultValue: 2)
             let style = NSMutableParagraphStyle()
             style.alignment = .center
             let attributes: [NSAttributedString.Key: Any] = [
@@ -165,8 +164,8 @@ public class NetworkChart: WidgetWrapper {
                 yMargin += letterHeight
             }
             
-            width += letterWidth + spacing
-            x = letterWidth + spacing
+            width += letterWidth + Constants.Widget.spacing
+            x = letterWidth + Constants.Widget.spacing
         }
         
         let box = NSBezierPath(roundedRect: NSRect(

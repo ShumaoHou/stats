@@ -97,7 +97,7 @@ public class StackWidget: WidgetWrapper {
         
         var values: [Stack_t] = []
         var mode: StackMode = .auto
-        let groupSpacing = self.appearanceSpacing(defaultValue: 0)
+        let groupSpacing: CGFloat = 0
         self.queue.sync {
             values = self.values
             mode = self.modeState
@@ -152,7 +152,8 @@ public class StackWidget: WidgetWrapper {
         }
         totalWidth += Constants.Widget.spacing // closing space
         
-        guard abs(self.frame.width - totalWidth) > 2 else { return }
+        let expectedWidth = totalWidth + self.appearanceWidthAdjustment(defaultValue: 0)
+        guard abs(self.frame.width - expectedWidth) > 0.5 else { return }
         self.setWidth(totalWidth)
     }
     

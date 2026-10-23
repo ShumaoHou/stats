@@ -231,6 +231,7 @@
 "Monospaced font" = "Monošírokové písmo";
 "Text size" = "Text size";
 "Metric spacing" = "Metric spacing";
+"Widget width" = "Widget width";
 "Reverse order" = "Obrátený poriadok"; // gemma4:31b
 "Chart history" = "História grafu"; // translategemma:4b
 "Default color" = "Predvolené"; // gemma4:31b

@@ -231,6 +231,7 @@
 "Monospaced font" = "แบบอักษรโมโนสเปซ";
 "Text size" = "Text size";
 "Metric spacing" = "Metric spacing";
+"Widget width" = "Widget width";
 "Reverse order" = "ลำดับย้อนกลับ"; // translategemma:4b
 "Chart history" = "ประวัติกราฟ"; // gemma4:31b
 "Default color" = "ค่าเริ่มต้น"; // translategemma:4b

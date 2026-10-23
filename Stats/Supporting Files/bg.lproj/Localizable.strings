@@ -231,6 +231,7 @@
 "Monospaced font" = "Моноширинен шрифт"; // gemma4:31b
 "Text size" = "Text size";
 "Metric spacing" = "Metric spacing";
+"Widget width" = "Widget width";
 "Reverse order" = "Обратен ред"; // translategemma:4b
 "Chart history" = "История на графиката"; // gemma4:31b
 "Default color" = "По подразбиране"; // gemma4:31b

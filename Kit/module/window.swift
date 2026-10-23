@@ -121,6 +121,7 @@ open class Window: NSStackView {
     }
     
     deinit {
+        self.setWidgetSettingsHighlight(false)
         NotificationCenter.default.removeObserver(self, name: .toggleOneView, object: nil)
         NotificationCenter.default.removeObserver(self, name: .togglePreview, object: nil)
     }
@@ -260,6 +261,10 @@ open class Window: NSStackView {
         self.loadModuleSettings()
         self.loadWidgetSettings()
     }
+
+    private func setWidgetSettingsHighlight(_ highlighted: Bool) {
+        self.widgets.filter { $0.isActive }.forEach { $0.item.setSettingsHighlight(highlighted) }
+    }
     
     private func loadModuleSettings() {
         self.moduleSettingsContainer?.subviews.forEach{ $0.removeFromSuperview() }
@@ -273,6 +278,8 @@ open class Window: NSStackView {
     }
     private func loadWidgetSettings() {
         self.widgetSettingsContainer?.subviews.forEach{ $0.removeFromSuperview() }
+        self.setWidgetSettingsHighlight(false)
+        self.setWidgetSettingsHighlight(true)
         let list = self.widgets.filter({ $0.isActive && $0.type != .label })
         
         guard !list.isEmpty else {
@@ -349,6 +356,7 @@ open class Window: NSStackView {
         }
         if let settings = self.settingsView {
             settings.isHidden = !settings.isHidden
+            self.setWidgetSettingsHighlight(!settings.isHidden)
         }
     }
 }

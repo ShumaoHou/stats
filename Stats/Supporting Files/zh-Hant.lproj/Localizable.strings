@@ -231,6 +231,7 @@
 "Monospaced font" = "等寬字體";
 "Text size" = "Text size";
 "Metric spacing" = "Metric spacing";
+"Widget width" = "Widget width";
 "Reverse order" = "排序對調";
 "Chart history" = "圖表顯示區間";
 "Default color" = "預設"; // translategemma:4b

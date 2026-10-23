@@ -179,7 +179,7 @@ public class SpeedWidget: WidgetWrapper {
         }
         
         if self.displayValueState.count > 1 {
-            width += self.appearanceSpacing(defaultValue: 2)*3
+            width += Constants.Widget.spacing*3
             if self.displayValueState.last == "i" {
                 width = self.drawRowItem(
                     initWidth: width,

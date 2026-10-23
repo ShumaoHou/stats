@@ -231,6 +231,7 @@
 "Monospaced font" = "Μονόχωρη γραμματοσειρά";
 "Text size" = "Text size";
 "Metric spacing" = "Metric spacing";
+"Widget width" = "Widget width";
 "Reverse order" = "Αντίστροφη σειρά"; // translategemma:4b
 "Chart history" = "Ιστορικό διαγράμματος"; // gemma4:31b
 "Default color" = "Προεπιλεγμένο"; // translategemma:4b

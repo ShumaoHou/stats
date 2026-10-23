@@ -231,6 +231,7 @@
 "Monospaced font" = "فونت تک‌فاصله"; // gemma4:31b
 "Text size" = "Text size";
 "Metric spacing" = "Metric spacing";
+"Widget width" = "Widget width";
 "Reverse order" = "ترتیب معکوس"; // gemma4:31b
 "Chart history" = "تاریخچه نمودار"; // translategemma:4b
 "Default color" = "پیش‌فرض"; // translategemma:4b

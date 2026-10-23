@@ -77,7 +77,6 @@ public class MemoryWidget: WidgetWrapper {
         
         let letterWidth: CGFloat = 8
         let textSize = self.appearanceTextSize(defaultValue: 9)
-        let spacing = self.appearanceSpacing(defaultValue: 2)
         let rowHeight: CGFloat = self.frame.height / 2
         var width: CGFloat = self.width
         var x: CGFloat = 0
@@ -102,7 +101,7 @@ public class MemoryWidget: WidgetWrapper {
             str = NSAttributedString.init(string: "U:", attributes: attributes)
             str.draw(with: rect)
             
-            x = letterWidth + spacing*2
+            x = letterWidth + Constants.Widget.spacing*2
             width += x
         }
         

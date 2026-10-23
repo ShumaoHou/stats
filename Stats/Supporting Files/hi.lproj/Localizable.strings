@@ -231,6 +231,7 @@
 "Monospaced font" = "मोनोस्पेस्ड फ़ॉन्ट";
 "Text size" = "Text size";
 "Metric spacing" = "Metric spacing";
+"Widget width" = "Widget width";
 "Reverse order" = "विपरीत क्रम"; // gemma4:31b
 "Chart history" = "चार्ट इतिहास"; // gemma4:31b
 "Default color" = "पूर्वनिर्धारित"; // gemma4:31b

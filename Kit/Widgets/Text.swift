@@ -48,7 +48,6 @@ public class TextWidget: WidgetWrapper {
         }
         
         let valueSize = self.appearanceTextSize(defaultValue: 12)
-        let horizontalSpacing = self.appearanceSpacing(defaultValue: 2)
         let style = NSMutableParagraphStyle()
         style.alignment = .center
         let stringAttributes = [
@@ -62,8 +61,8 @@ public class TextWidget: WidgetWrapper {
             options: [.usesLineFragmentOrigin, .usesFontLeading]
         )
         let width = (size.width+Constants.Widget.margin.x*2).roundedUpToNearestTen()
-        let origin: CGPoint = CGPoint(x: Constants.Widget.margin.x + horizontalSpacing, y: ((Constants.Widget.height-valueSize-1)/2))
-        let rect = CGRect(x: origin.x, y: origin.y, width: width - (Constants.Widget.margin.x*2) - (horizontalSpacing*2), height: valueSize)
+        let origin: CGPoint = CGPoint(x: Constants.Widget.margin.x, y: ((Constants.Widget.height-valueSize-1)/2))
+        let rect = CGRect(x: origin.x, y: origin.y, width: width - (Constants.Widget.margin.x*2), height: valueSize)
         attributedString.draw(with: rect)
         
         self.setWidth(width)

@@ -231,6 +231,7 @@
 "Monospaced font" = "Font monospațiat"; // gemma4:31b
 "Text size" = "Text size";
 "Metric spacing" = "Metric spacing";
+"Widget width" = "Widget width";
 "Reverse order" = "Ordine invers"; // gemma4:31b
 "Chart history" = "Istoricul graficului"; // gemma4:31b
 "Default color" = "Implicit"; // translategemma:4b

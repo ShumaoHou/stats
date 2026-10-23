@@ -231,6 +231,7 @@
 "Monospaced font" = "等幅フォント";
 "Text size" = "Text size";
 "Metric spacing" = "Metric spacing";
+"Widget width" = "Widget width";
 "Reverse order" = "逆順"; // translategemma:4b
 "Chart history" = "グラフの履歴"; // translategemma:4b
 "Default color" = "デフォルト"; // translategemma:4b

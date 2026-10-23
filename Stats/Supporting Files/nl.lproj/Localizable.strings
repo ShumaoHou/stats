@@ -231,6 +231,7 @@
 "Monospaced font" = "Monospaced lettertype";
 "Text size" = "Text size";
 "Metric spacing" = "Metric spacing";
+"Widget width" = "Widget width";
 "Reverse order" = "Omgekeerde volgorde"; // translategemma:4b
 "Chart history" = "Grafiekgeschiedenis"; // gemma4:31b
 "Default color" = "Standaard"; // translategemma:4b

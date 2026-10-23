@@ -231,6 +231,7 @@
 "Monospaced font" = "Tipus de lletra monoespaiat";
 "Text size" = "Text size";
 "Metric spacing" = "Metric spacing";
+"Widget width" = "Widget width";
 "Reverse order" = "Canvia l'ordre";
 "Chart history" = "Historial de gràfics";
 "Default color" = "Color per determinat";

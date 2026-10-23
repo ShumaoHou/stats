@@ -159,6 +159,7 @@ public protocol widget_p: NSView {
     var onClick: (() -> Void)? { get set }
     
     func settings() -> NSView
+    func setSettingsHighlight(_ highlighted: Bool)
 }
 
 open class WidgetWrapper: NSView, widget_p {
@@ -186,6 +187,8 @@ open class WidgetWrapper: NSView, widget_p {
         var newWidth = width
         if width == 0 || width == 1 {
             newWidth = self.emptyView()
+        } else {
+            newWidth = max(1, width + self.appearanceWidthAdjustment(defaultValue: 0))
         }
         
         guard self.shadowSize.width != newWidth else { return }
@@ -229,7 +232,7 @@ open class WidgetWrapper: NSView, widget_p {
         CGFloat(Store.shared.int(key: "\(self.title)_\(self.type.rawValue)_textSize", defaultValue: defaultValue))
     }
 
-    public func appearanceSpacing(defaultValue: Int) -> CGFloat {
+    public func appearanceWidthAdjustment(defaultValue: Int) -> CGFloat {
         CGFloat(Store.shared.int(key: "\(self.title)_\(self.type.rawValue)_groupSpacing", defaultValue: defaultValue))
     }
 
@@ -242,9 +245,9 @@ open class WidgetWrapper: NSView, widget_p {
                 max: 16,
                 suffix: "pt"
             )),
-            PreferencesRow(localizedString("Metric spacing"), component: self.appearanceSlider(
+            PreferencesRow(localizedString("Widget width"), component: self.appearanceSlider(
                 key: "groupSpacing",
-                value: Store.shared.int(key: "\(self.title)_\(self.type.rawValue)_groupSpacing", defaultValue: defaultSpacing),
+                value: Store.shared.int(key: "\(self.title)_\(self.type.rawValue)_groupSpacing", defaultValue: 0),
                 min: -8,
                 max: 20,
                 suffix: "pt"
@@ -286,8 +289,15 @@ open class WidgetWrapper: NSView, widget_p {
 
     open func settings() -> NSView {
         let view = SettingsContainerView()
-        view.addArrangedSubview(self.appearanceSettings(defaultTextSize: 10, defaultSpacing: 2))
+        view.addArrangedSubview(self.appearanceSettings(defaultTextSize: 10, defaultSpacing: 0))
         return view
+    }
+
+    public func setSettingsHighlight(_ highlighted: Bool) {
+        self.wantsLayer = true
+        self.layer?.borderWidth = highlighted ? 1 : 0
+        self.layer?.borderColor = highlighted ? NSColor.controlAccentColor.cgColor : nil
+        self.layer?.cornerRadius = 2
     }
     
     open override func mouseDown(with event: NSEvent) {
