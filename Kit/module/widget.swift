@@ -160,6 +160,7 @@ public protocol widget_p: NSView {
     
     func settings() -> NSView
     func setSettingsHighlight(_ highlighted: Bool)
+    func appearanceWidthAdjustment(defaultValue: Int) -> CGFloat
 }
 
 open class WidgetWrapper: NSView, widget_p {
@@ -516,7 +517,7 @@ public class MenuBar {
                         s.recalculateWidth()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             s.view.addWidget(w.item)
-                            s.view.recalculate(s.sortedWidgets)
+                            s.view.recalculate(s.sortedWidgets, spacing: s.widgetSpacing())
                         }
                     })
                 } else {
@@ -524,7 +525,7 @@ public class MenuBar {
                         s.view.removeWidget(type: type)
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             s.recalculateWidth()
-                            s.view.recalculate(s.sortedWidgets)
+                            s.view.recalculate(s.sortedWidgets, spacing: s.widgetSpacing())
                         }
                     })
                 }
@@ -583,17 +584,30 @@ public class MenuBar {
         })
     }
     
+    private func widgetSpacing() -> [widget_t: CGFloat] {
+        Dictionary(uniqueKeysWithValues: self.activeWidgets.map { widget in
+            (
+                widget.type,
+                max(0, Constants.Widget.spacing + widget.item.appearanceWidthAdjustment(defaultValue: 0))
+            )
+        })
+    }
+
     private func recalculateWidth() {
         guard self.oneView, self.active else { return }
-        
-        let w = self.activeWidgets.isEmpty ? 0 : self.activeWidgets.map({ $0.item.frame.width }).reduce(0, +) +
-            (CGFloat(self.activeWidgets.count - 1) * Constants.Widget.spacing) +
-            Constants.Widget.spacing * 2
+
+        let spacing = self.widgetSpacing()
+        let orderedWidgets = self.activeWidgets.sorted { $0.position < $1.position }
+        let internalSpacing = orderedWidgets.dropLast().reduce(CGFloat.zero) { total, widget in
+            total + (spacing[widget.type] ?? Constants.Widget.spacing)
+        }
+        let w = orderedWidgets.isEmpty ? 0 : orderedWidgets.map({ $0.item.frame.width }).reduce(0, +) +
+            internalSpacing + Constants.Widget.spacing * 2
         self.menuBarItem?.length = w
         self.view.setFrameOrigin(NSPoint(x: 0, y: 0))
         self.view.setFrameSize(NSSize(width: w, height: Constants.Widget.height))
-        
-        self.view.recalculate(self.sortedWidgets)
+
+        self.view.recalculate(self.sortedWidgets, spacing: spacing)
         self.callback?()
     }
     
@@ -639,7 +653,7 @@ public class MenuBar {
         guard let name = notification.userInfo?["module"] as? String, name == self.moduleName else {
             return
         }
-        self.view.recalculate(self.sortedWidgets)
+        self.view.recalculate(self.sortedWidgets, spacing: self.widgetSpacing())
     }
 }
 
@@ -662,12 +676,14 @@ public class MenuBarView: NSView {
         }
     }
     
-    public func recalculate(_ list: [widget_t] = []) {
+    public func recalculate(_ list: [widget_t] = [], spacing: [widget_t: CGFloat] = [:]) {
         var x: CGFloat = Constants.Widget.spacing
-        list.forEach { (type: widget_t) in
+        list.enumerated().forEach { index, type in
             if let view = self.subviews.first(where: { $0.identifier == NSUserInterfaceItemIdentifier(type.rawValue) }) {
                 view.setFrameOrigin(NSPoint(x: x, y: view.frame.origin.y))
-                x = view.frame.origin.x + view.frame.width + Constants.Widget.spacing
+                if index < list.count - 1 {
+                    x = view.frame.origin.x + view.frame.width + (spacing[type] ?? Constants.Widget.spacing)
+                }
             }
         }
     }
