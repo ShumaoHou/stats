@@ -214,7 +214,7 @@ public class BatteryWidget: WidgetWrapper {
             inner.fill()
             
             if innerPercentage {
-                let fontSize: CGFloat = self.xlSizeState ? 9 : 8
+                let fontSize = self.appearanceTextSize(defaultValue: self.xlSizeState ? 9 : 8)
                 let style = NSMutableParagraphStyle()
                 style.alignment = .center
                 let attributes = [
@@ -266,15 +266,16 @@ public class BatteryWidget: WidgetWrapper {
     
     private func drawOneRow(value: String, x: CGFloat) -> CGFloat {
         let dark = isDarkMode
-        let entry = self.textCache.entry(value, key: "one\(dark)") {
+        let textSize = self.appearanceTextSize(defaultValue: 12)
+        let entry = self.textCache.entry(value, key: "one\(dark)|\(textSize)") {
             [
-                NSAttributedString.Key.font: NSFont.systemFont(ofSize: 12, weight: .regular),
+                NSAttributedString.Key.font: NSFont.systemFont(ofSize: textSize, weight: .regular),
                 NSAttributedString.Key.foregroundColor: dark ? NSColor.white : NSColor.textColor,
                 NSAttributedString.Key.paragraphStyle: NSMutableParagraphStyle()
             ]
         }
         
-        let rect = CGRect(x: x, y: (Constants.Widget.height-13)/2, width: entry.width, height: 12)
+        let rect = CGRect(x: x, y: (Constants.Widget.height-textSize)/2, width: entry.width, height: textSize)
         entry.string.draw(with: rect)
         
         return entry.width
@@ -451,6 +452,7 @@ public class BatteryWidget: WidgetWrapper {
                 state: self.chargerIconInside
             ))
         ]))
+        view.addArrangedSubview(self.appearanceSettings(defaultTextSize: 12, defaultSpacing: 2))
         
         return view
     }
@@ -585,15 +587,16 @@ public class BatteryDetailsWidget: WidgetWrapper {
     
     private func drawOneRow(value: String, x: CGFloat) -> CGFloat {
         let dark = isDarkMode
-        let entry = self.textCache.entry(value, key: "one\(dark)") {
+        let textSize = self.appearanceTextSize(defaultValue: 12)
+        let entry = self.textCache.entry(value, key: "one\(dark)|\(textSize)") {
             [
-                NSAttributedString.Key.font: NSFont.systemFont(ofSize: 12, weight: .regular),
+                NSAttributedString.Key.font: NSFont.systemFont(ofSize: textSize, weight: .regular),
                 NSAttributedString.Key.foregroundColor: dark ? NSColor.white : NSColor.textColor,
                 NSAttributedString.Key.paragraphStyle: NSMutableParagraphStyle()
             ]
         }
         
-        let rect = CGRect(x: x, y: (Constants.Widget.height-12)/2, width: entry.width, height: 12)
+        let rect = CGRect(x: x, y: (Constants.Widget.height-textSize)/2, width: entry.width, height: textSize)
         entry.string.draw(with: rect)
         
         return entry.width
@@ -661,6 +664,7 @@ public class BatteryDetailsWidget: WidgetWrapper {
                 selected: self.mode
             ))
         ]))
+        view.addArrangedSubview(self.appearanceSettings(defaultTextSize: 12, defaultSpacing: 2))
         
         return view
     }

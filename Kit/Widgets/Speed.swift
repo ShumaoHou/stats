@@ -179,7 +179,7 @@ public class SpeedWidget: WidgetWrapper {
         }
         
         if self.displayValueState.count > 1 {
-            width += Constants.Widget.spacing*3
+            width += self.appearanceSpacing(defaultValue: 2)*3
             if self.displayValueState.last == "i" {
                 width = self.drawRowItem(
                     initWidth: width,
@@ -248,7 +248,7 @@ public class SpeedWidget: WidgetWrapper {
         let size: CGFloat = 10
         
         let inputStringAttributes = [
-            NSAttributedString.Key.font: NSFont.systemFont(ofSize: 11, weight: .regular),
+            NSAttributedString.Key.font: NSFont.systemFont(ofSize: self.appearanceTextSize(defaultValue: 9) + 2, weight: .regular),
             NSAttributedString.Key.foregroundColor: color,
             NSAttributedString.Key.paragraphStyle: style
         ]
@@ -319,7 +319,7 @@ public class SpeedWidget: WidgetWrapper {
         let rowHeight: CGFloat = self.frame.height
         let height: CGFloat = 10
         let inputAttributes = [
-            NSAttributedString.Key.font: NSFont.systemFont(ofSize: 12, weight: .regular),
+            NSAttributedString.Key.font: NSFont.systemFont(ofSize: self.appearanceTextSize(defaultValue: 9) + 3, weight: .regular),
             NSAttributedString.Key.foregroundColor: color,
             NSAttributedString.Key.paragraphStyle: NSMutableParagraphStyle()
         ]
@@ -351,12 +351,12 @@ public class SpeedWidget: WidgetWrapper {
             style.alignment = self.valueAlignment
             
             let inputStringAttributes = [
-                NSAttributedString.Key.font: NSFont.systemFont(ofSize: 9, weight: .light),
+                NSAttributedString.Key.font: NSFont.systemFont(ofSize: self.appearanceTextSize(defaultValue: 9), weight: .light),
                 NSAttributedString.Key.foregroundColor: self.inputColor(self.valueColorState),
                 NSAttributedString.Key.paragraphStyle: style
             ]
             let outputStringAttributes = [
-                NSAttributedString.Key.font: NSFont.systemFont(ofSize: 9, weight: .light),
+                NSAttributedString.Key.font: NSFont.systemFont(ofSize: self.appearanceTextSize(defaultValue: 9), weight: .light),
                 NSAttributedString.Key.foregroundColor: self.outputColor(self.valueColorState),
                 NSAttributedString.Key.paragraphStyle: style
             ]
@@ -464,7 +464,7 @@ public class SpeedWidget: WidgetWrapper {
         let x: CGFloat = self.iconAlignmentState == "left" ? Constants.Widget.margin.x : Constants.Widget.margin.x+(width-6)
         
         let inputAttributes = [
-            NSAttributedString.Key.font: NSFont.systemFont(ofSize: 9, weight: .regular),
+            NSAttributedString.Key.font: NSFont.systemFont(ofSize: self.appearanceTextSize(defaultValue: 9), weight: .regular),
             NSAttributedString.Key.foregroundColor: self.inputColor(self.iconColorState),
             NSAttributedString.Key.paragraphStyle: NSMutableParagraphStyle()
         ]
@@ -473,7 +473,7 @@ public class SpeedWidget: WidgetWrapper {
         str.draw(with: rect)
         
         let outputAttributes = [
-            NSAttributedString.Key.font: NSFont.systemFont(ofSize: 9, weight: .regular),
+            NSAttributedString.Key.font: NSFont.systemFont(ofSize: self.appearanceTextSize(defaultValue: 9), weight: .regular),
             NSAttributedString.Key.foregroundColor: self.outputColor(self.iconColorState),
             NSAttributedString.Key.paragraphStyle: NSMutableParagraphStyle()
         ]
@@ -581,6 +581,7 @@ public class SpeedWidget: WidgetWrapper {
                 selected: self.outputColorState.key
             ))
         ]))
+        view.addArrangedSubview(self.appearanceSettings(defaultTextSize: 9, defaultSpacing: 2))
         
         return view
     }

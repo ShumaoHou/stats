@@ -120,6 +120,7 @@ public class PieChart: WidgetWrapper {
                 state: self.monochromeState
             ))
         ]))
+        view.addArrangedSubview(self.appearanceSettings(defaultTextSize: 7, defaultSpacing: 2))
         
         return view
     }

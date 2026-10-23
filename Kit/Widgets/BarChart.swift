@@ -148,16 +148,26 @@ public class BarChart: WidgetWrapper {
         if self.labelState {
             let letterHeight = self.frame.height / 3
             let letterWidth: CGFloat = 6.0
+            let labelSize = self.appearanceTextSize(defaultValue: 7)
+            let spacing = self.appearanceSpacing(defaultValue: 2)
+            let style = NSMutableParagraphStyle()
+            style.alignment = .center
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: NSFont.systemFont(ofSize: labelSize, weight: .regular),
+                .foregroundColor: NSColor.textColor,
+                .paragraphStyle: style
+            ]
             
             var yMargin: CGFloat = 0
-            for char in self.NSLabelCharts {
-                let rect = CGRect(x: x, y: yMargin, width: letterWidth, height: letterHeight)
-                char.draw(with: rect)
+            for char in String(self.title.prefix(3)).uppercased().reversed() {
+                NSAttributedString(string: "\(char)", attributes: attributes).draw(
+                    with: CGRect(x: x, y: yMargin, width: letterWidth, height: letterHeight)
+                )
                 yMargin += letterHeight
             }
             
-            width += letterWidth + Constants.Widget.spacing
-            x = letterWidth + Constants.Widget.spacing
+            width += letterWidth + spacing
+            x = letterWidth + spacing
         }
         
         let box = NSBezierPath(roundedRect: NSRect(
@@ -290,6 +300,7 @@ public class BarChart: WidgetWrapper {
             PreferencesRow(localizedString("Box"), component: box),
             PreferencesRow(localizedString("Frame"), component: frame)
         ]))
+        view.addArrangedSubview(self.appearanceSettings(defaultTextSize: 7, defaultSpacing: 2))
         
         return view
     }

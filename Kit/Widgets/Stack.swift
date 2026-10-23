@@ -33,8 +33,6 @@ public class StackWidget: WidgetWrapper {
     private var fixedSizeState: Bool = false
     private var monospacedFontState: Bool = false
     private var alignmentState: String = "left"
-    private var textSizeState: Int = 10
-    private var groupSpacingState: Int = 0
     
     private var values: [Stack_t] = []
     private let textCache = WidgetTextCache(limit: 256)
@@ -74,8 +72,6 @@ public class StackWidget: WidgetWrapper {
             self.fixedSizeState = Store.shared.bool(key: "\(self.title)_\(self.type.rawValue)_size", defaultValue: self.fixedSizeState)
             self.monospacedFontState = Store.shared.bool(key: "\(self.title)_\(self.type.rawValue)_monospacedFont", defaultValue: self.monospacedFontState)
             self.alignmentState = Store.shared.string(key: "\(self.title)_\(self.type.rawValue)_alignment", defaultValue: self.alignmentState)
-            self.textSizeState = Store.shared.int(key: "\(self.title)_\(self.type.rawValue)_textSize", defaultValue: self.textSizeState)
-            self.groupSpacingState = Store.shared.int(key: "\(self.title)_\(self.type.rawValue)_groupSpacing", defaultValue: self.groupSpacingState)
         }
         
         self.orderTableView.getList = { [weak self] in
@@ -101,11 +97,10 @@ public class StackWidget: WidgetWrapper {
         
         var values: [Stack_t] = []
         var mode: StackMode = .auto
-        var groupSpacing: CGFloat = 0
+        let groupSpacing = self.appearanceSpacing(defaultValue: 0)
         self.queue.sync {
             values = self.values
             mode = self.modeState
-            groupSpacing = CGFloat(self.groupSpacingState)
         }
         
         guard !values.isEmpty else {
@@ -165,12 +160,11 @@ public class StackWidget: WidgetWrapper {
         var monospacedFontState: Bool = false
         var fixedSizeState: Bool = false
         var alignment: NSTextAlignment = .left
-        var textSize: CGFloat = 10
+        let textSize = self.appearanceTextSize(defaultValue: 10)
         self.queue.sync {
             monospacedFontState = self.monospacedFontState
             fixedSizeState = self.fixedSizeState
             alignment = self.alignment
-            textSize = CGFloat(self.textSizeState)
         }
         
         let entry = self.textCache.entry(element.value, key: "one|\(monospacedFontState)|\(alignment.rawValue)|\(textSize)") {
@@ -202,12 +196,11 @@ public class StackWidget: WidgetWrapper {
         var monospacedFontState: Bool = false
         var fixedSizeState: Bool = false
         var alignment: NSTextAlignment = .left
-        var textSize: CGFloat = 10
+        let textSize = self.appearanceTextSize(defaultValue: 10)
         self.queue.sync {
             monospacedFontState = self.monospacedFontState
             fixedSizeState = self.fixedSizeState
             alignment = self.alignment
-            textSize = CGFloat(self.textSizeState)
         }
         
         let key = "two|\(monospacedFontState)|\(alignment.rawValue)|\(textSize)"
@@ -287,20 +280,6 @@ public class StackWidget: WidgetWrapper {
                 action: #selector(self.toggleAlignment),
                 items: Alignments,
                 selected: self.alignmentState
-            )),
-            PreferencesRow(localizedString("Text size"), component: self.sliderView(
-                action: #selector(self.changeTextSize(_:)),
-                value: self.textSizeState,
-                min: 8,
-                max: 16,
-                suffix: "pt"
-            )),
-            PreferencesRow(localizedString("Metric spacing"), component: self.sliderView(
-                action: #selector(self.changeGroupSpacing(_:)),
-                value: self.groupSpacingState,
-                min: -8,
-                max: 20,
-                suffix: "pt"
             ))
         ]
         if self.title != "Clock" {
@@ -310,6 +289,7 @@ public class StackWidget: WidgetWrapper {
             )))
         }
         view.addArrangedSubview(PreferencesSection(rows))
+        view.addArrangedSubview(self.appearanceSettings(defaultTextSize: 10, defaultSpacing: 0))
         
         view.addArrangedSubview(self.orderTableView)
         
@@ -354,51 +334,6 @@ public class StackWidget: WidgetWrapper {
         self.display()
     }
 
-    private func sliderView(action: Selector, value: Int, min: Double, max: Double, suffix: String) -> NSView {
-        let view = NSStackView()
-        view.orientation = .horizontal
-        view.spacing = 6
-        view.widthAnchor.constraint(equalToConstant: 195).isActive = true
-
-        let slider = NSSlider(value: Double(value), minValue: min, maxValue: max, target: self, action: action)
-        slider.controlSize = .small
-        slider.isContinuous = true
-        slider.translatesAutoresizingMaskIntoConstraints = false
-
-        let valueField = LabelField("\(value)\(suffix)")
-        valueField.alignment = .center
-        valueField.widthAnchor.constraint(equalToConstant: 42).isActive = true
-
-        view.addArrangedSubview(slider)
-        view.addArrangedSubview(valueField)
-        return view
-    }
-
-    @objc private func changeTextSize(_ sender: NSSlider) {
-        let value = Int(sender.doubleValue.rounded())
-        self.queue.sync {
-            self.textSizeState = value
-        }
-        self.updateSliderValue(sender, value: "\(value)pt")
-        Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_textSize", value: value)
-        self.display()
-    }
-
-    @objc private func changeGroupSpacing(_ sender: NSSlider) {
-        let value = Int(sender.doubleValue.rounded())
-        self.queue.sync {
-            self.groupSpacingState = value
-        }
-        self.updateSliderValue(sender, value: "\(value)pt")
-        Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_groupSpacing", value: value)
-        self.display()
-    }
-
-    private func updateSliderValue(_ sender: NSSlider, value: String) {
-        guard let view = sender.superview as? NSStackView,
-              let field = view.arrangedSubviews.compactMap({ $0 as? NSTextField }).first else { return }
-        field.stringValue = value
-    }
 }
 
 private class OrderTableView: NSView, NSTableViewDelegate, NSTableViewDataSource {

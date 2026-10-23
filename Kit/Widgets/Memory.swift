@@ -76,6 +76,8 @@ public class MemoryWidget: WidgetWrapper {
         }
         
         let letterWidth: CGFloat = 8
+        let textSize = self.appearanceTextSize(defaultValue: 9)
+        let spacing = self.appearanceSpacing(defaultValue: 2)
         let rowHeight: CGFloat = self.frame.height / 2
         var width: CGFloat = self.width
         var x: CGFloat = 0
@@ -86,7 +88,7 @@ public class MemoryWidget: WidgetWrapper {
         let style = NSMutableParagraphStyle()
         style.alignment = .right
         var attributes = [
-            NSAttributedString.Key.font: NSFont.systemFont(ofSize: 9, weight: .light),
+            NSAttributedString.Key.font: NSFont.systemFont(ofSize: textSize, weight: .light),
             NSAttributedString.Key.foregroundColor: NSColor.textColor,
             NSAttributedString.Key.paragraphStyle: style
         ]
@@ -100,7 +102,7 @@ public class MemoryWidget: WidgetWrapper {
             str = NSAttributedString.init(string: "U:", attributes: attributes)
             str.draw(with: rect)
             
-            x = letterWidth + Constants.Widget.spacing*2
+            x = letterWidth + spacing*2
             width += x
         }
         
@@ -180,6 +182,7 @@ public class MemoryWidget: WidgetWrapper {
                 state: self.orderReversedState
             ))
         ]))
+        view.addArrangedSubview(self.appearanceSettings(defaultTextSize: 9, defaultSpacing: 2))
         
         return view
     }

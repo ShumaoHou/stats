@@ -105,8 +105,10 @@ public class Mini: WidgetWrapper {
             suffix = self._suffix
         }
         
-        let valueSize: CGFloat = self.labelState ? 12 : 14
-        var origin: CGPoint = CGPoint(x: Constants.Widget.margin.x, y: (Constants.Widget.height-valueSize)/2)
+        let textSize = self.appearanceTextSize(defaultValue: 12)
+        let horizontalSpacing = self.appearanceSpacing(defaultValue: 2)
+        let valueSize: CGFloat = self.labelState ? textSize : textSize + 2
+        var origin: CGPoint = CGPoint(x: Constants.Widget.margin.x + horizontalSpacing, y: (Constants.Widget.height-valueSize)/2)
         let style = NSMutableParagraphStyle()
         style.alignment = self.labelState ? self.alignment : .center
         
@@ -115,11 +117,12 @@ public class Mini: WidgetWrapper {
             style.alignment = self.alignment
             
             let stringAttributes = [
-                NSAttributedString.Key.font: NSFont.systemFont(ofSize: 7, weight: .light),
+                NSAttributedString.Key.font: NSFont.systemFont(ofSize: max(6, textSize * 0.58), weight: .light),
                 NSAttributedString.Key.foregroundColor: isDarkMode ? NSColor.white : NSColor.textColor,
                 NSAttributedString.Key.paragraphStyle: style
             ]
-            let rect = CGRect(x: origin.x, y: 12, width: self.width - (Constants.Widget.margin.x*2), height: 7)
+            let labelSize = max(6, textSize * 0.58)
+            let rect = CGRect(x: origin.x, y: 12, width: self.width - (Constants.Widget.margin.x*2) - (horizontalSpacing*2), height: labelSize)
             let str = NSAttributedString.init(string: label, attributes: stringAttributes)
             str.draw(with: rect)
             
@@ -140,7 +143,7 @@ public class Mini: WidgetWrapper {
             NSAttributedString.Key.foregroundColor: color,
             NSAttributedString.Key.paragraphStyle: style
         ]
-        let rect = CGRect(x: origin.x, y: origin.y, width: self.width - (Constants.Widget.margin.x*2), height: valueSize+1)
+        let rect = CGRect(x: origin.x, y: origin.y, width: self.width - (Constants.Widget.margin.x*2) - (horizontalSpacing*2), height: valueSize+1)
         let str = NSAttributedString.init(string: "\(Int(value.rounded(toPlaces: 2) * 100))\(suffix)", attributes: stringAttributes)
         str.draw(with: rect)
         
@@ -232,6 +235,7 @@ public class Mini: WidgetWrapper {
                 selected: self.alignmentState
             ))
         ]))
+        view.addArrangedSubview(self.appearanceSettings(defaultTextSize: 12, defaultSpacing: 2))
         
         return view
     }

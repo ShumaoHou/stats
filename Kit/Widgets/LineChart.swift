@@ -173,16 +173,26 @@ public class LineChart: WidgetWrapper {
         if self.labelState {
             let letterHeight = self.frame.height / 3
             let letterWidth: CGFloat = 6.0
+            let labelSize = self.appearanceTextSize(defaultValue: 8)
+            let spacing = self.appearanceSpacing(defaultValue: 2)
+            let style = NSMutableParagraphStyle()
+            style.alignment = .center
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: NSFont.systemFont(ofSize: labelSize, weight: .regular),
+                .foregroundColor: NSColor.textColor,
+                .paragraphStyle: style
+            ]
             
             var yMargin: CGFloat = 0
-            for char in self.NSLabelCharts {
-                let rect = CGRect(x: x, y: yMargin, width: letterWidth, height: letterHeight)
-                char.draw(with: rect)
+            for char in String(self.title.prefix(3)).uppercased().reversed() {
+                NSAttributedString(string: "\(char)", attributes: attributes).draw(
+                    with: CGRect(x: x, y: yMargin, width: letterWidth, height: letterHeight)
+                )
                 yMargin += letterHeight
             }
             
-            width += letterWidth + Constants.Widget.spacing
-            x = letterWidth + Constants.Widget.spacing
+            width += letterWidth + spacing
+            x = letterWidth + spacing
         }
         
         if self.valueState {
@@ -195,7 +205,7 @@ public class LineChart: WidgetWrapper {
             }
             
             let stringAttributes = [
-                NSAttributedString.Key.font: NSFont.systemFont(ofSize: 8, weight: .regular),
+                NSAttributedString.Key.font: NSFont.systemFont(ofSize: self.appearanceTextSize(defaultValue: 8), weight: .regular),
                 NSAttributedString.Key.foregroundColor: valueColor,
                 NSAttributedString.Key.paragraphStyle: style
             ]
@@ -316,6 +326,7 @@ public class LineChart: WidgetWrapper {
                 selected: self.scaleState.key
             ))
         ]))
+        view.addArrangedSubview(self.appearanceSettings(defaultTextSize: 8, defaultSpacing: 2))
         
         return view
     }

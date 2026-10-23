@@ -225,7 +225,70 @@ open class WidgetWrapper: NSView, widget_p {
         }
     }
     
-    open func settings() -> NSView { return NSView() }
+    public func appearanceTextSize(defaultValue: Int) -> CGFloat {
+        CGFloat(Store.shared.int(key: "\(self.title)_\(self.type.rawValue)_textSize", defaultValue: defaultValue))
+    }
+
+    public func appearanceSpacing(defaultValue: Int) -> CGFloat {
+        CGFloat(Store.shared.int(key: "\(self.title)_\(self.type.rawValue)_groupSpacing", defaultValue: defaultValue))
+    }
+
+    public func appearanceSettings(defaultTextSize: Int, defaultSpacing: Int) -> NSView {
+        PreferencesSection([
+            PreferencesRow(localizedString("Text size"), component: self.appearanceSlider(
+                key: "textSize",
+                value: Store.shared.int(key: "\(self.title)_\(self.type.rawValue)_textSize", defaultValue: defaultTextSize),
+                min: 7,
+                max: 16,
+                suffix: "pt"
+            )),
+            PreferencesRow(localizedString("Metric spacing"), component: self.appearanceSlider(
+                key: "groupSpacing",
+                value: Store.shared.int(key: "\(self.title)_\(self.type.rawValue)_groupSpacing", defaultValue: defaultSpacing),
+                min: -8,
+                max: 20,
+                suffix: "pt"
+            ))
+        ])
+    }
+
+    private func appearanceSlider(key: String, value: Int, min: Double, max: Double, suffix: String) -> NSView {
+        let view = NSStackView()
+        view.orientation = .horizontal
+        view.spacing = 6
+        view.widthAnchor.constraint(equalToConstant: 195).isActive = true
+
+        let slider = NSSlider(value: Double(value), minValue: min, maxValue: max, target: self, action: #selector(self.changeAppearance(_:)))
+        slider.controlSize = .small
+        slider.isContinuous = true
+        slider.identifier = NSUserInterfaceItemIdentifier(key)
+
+        let valueField = LabelField("\(value)\(suffix)")
+        valueField.alignment = .center
+        valueField.widthAnchor.constraint(equalToConstant: 42).isActive = true
+
+        view.addArrangedSubview(slider)
+        view.addArrangedSubview(valueField)
+        return view
+    }
+
+    @objc private func changeAppearance(_ sender: NSSlider) {
+        guard let key = sender.identifier?.rawValue else { return }
+        let value = Int(sender.doubleValue.rounded())
+        Store.shared.set(key: "\(self.title)_\(self.type.rawValue)_\(key)", value: value)
+        if let view = sender.superview as? NSStackView,
+           let field = view.arrangedSubviews.compactMap({ $0 as? NSTextField }).first {
+            field.stringValue = "\(value)pt"
+        }
+        self.display()
+        self.widthHandler?()
+    }
+
+    open func settings() -> NSView {
+        let view = SettingsContainerView()
+        view.addArrangedSubview(self.appearanceSettings(defaultTextSize: 10, defaultSpacing: 2))
+        return view
+    }
     
     open override func mouseDown(with event: NSEvent) {
         if let f = self.onClick {

@@ -102,6 +102,7 @@ public class Tachometer: WidgetWrapper {
                 state: self.monochromeState
             ))
         ]))
+        view.addArrangedSubview(self.appearanceSettings(defaultTextSize: 10, defaultSpacing: 2))
         
         return view
     }
