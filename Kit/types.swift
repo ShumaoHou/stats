@@ -314,6 +314,7 @@ public extension Notification.Name {
     static let pause = Notification.Name("pause")
     static let toggleFanControl = Notification.Name("toggleFanControl")
     static let combinedModulesPopup = Notification.Name("combinedModulesPopup")
+    static let settingsVisibility = Notification.Name("settingsVisibility")
     static let remoteLoginSuccess = Notification.Name("remoteLoginSuccess")
     static let remoteState = Notification.Name("remoteState")
     static let remoteAuthenticated = Notification.Name("remoteAuthenticated")

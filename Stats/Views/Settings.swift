@@ -106,6 +106,7 @@ class SettingsWindow: NSWindow, NSWindowDelegate, NSToolbarDelegate {
     
     func windowWillClose(_ notification: Notification) {
         self.updateReaderVisibility(visible: false)
+        self.updateWidgetHighlight(visible: false)
         let onClose = self.onClose
         DispatchQueue.main.async {
             onClose?()
@@ -115,14 +116,25 @@ class SettingsWindow: NSWindow, NSWindowDelegate, NSToolbarDelegate {
     override func setIsVisible(_ flag: Bool) {
         super.setIsVisible(flag)
         self.updateReaderVisibility(visible: flag && !self.isMiniaturized)
+        self.updateWidgetHighlight(visible: flag && !self.isMiniaturized)
     }
 
     func windowDidMiniaturize(_ notification: Notification) {
         self.updateReaderVisibility(visible: false)
+        self.updateWidgetHighlight(visible: false)
     }
 
     func windowDidDeminiaturize(_ notification: Notification) {
         self.updateReaderVisibility()
+        self.updateWidgetHighlight(visible: true)
+    }
+
+    private func updateWidgetHighlight(visible: Bool) {
+        NotificationCenter.default.post(
+            name: .settingsVisibility,
+            object: nil,
+            userInfo: ["visible": visible]
+        )
     }
 
     private func updateReaderVisibility(visible: Bool? = nil) {

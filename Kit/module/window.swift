@@ -114,6 +114,7 @@ open class Window: NSStackView {
         
         NotificationCenter.default.addObserver(self, selector: #selector(listenForOneView), name: .toggleOneView, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(listenForToggleView), name: .togglePreview, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(listenForSettingsVisibility(_:)), name: .settingsVisibility, object: nil)
         
         self.segmentedControl?.widthAnchor.constraint(equalTo: self.widthAnchor, constant: -(Constants.Settings.margin*2)).isActive = true
         self.widgetSelector?.widthAnchor.constraint(equalTo: self.widthAnchor, constant: -(Constants.Settings.margin*2)).isActive = true
@@ -124,6 +125,7 @@ open class Window: NSStackView {
         self.setWidgetSettingsHighlight(false)
         NotificationCenter.default.removeObserver(self, name: .toggleOneView, object: nil)
         NotificationCenter.default.removeObserver(self, name: .togglePreview, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .settingsVisibility, object: nil)
     }
     
     required public init?(coder: NSCoder) {
@@ -264,6 +266,11 @@ open class Window: NSStackView {
 
     private func setWidgetSettingsHighlight(_ highlighted: Bool) {
         self.widgets.filter { $0.isActive }.forEach { $0.item.setSettingsHighlight(highlighted) }
+    }
+
+    @objc private func listenForSettingsVisibility(_ notification: Notification) {
+        guard let visible = notification.userInfo?["visible"] as? Bool else { return }
+        self.setWidgetSettingsHighlight(visible)
     }
     
     private func loadModuleSettings() {
