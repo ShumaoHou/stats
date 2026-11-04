@@ -59,6 +59,20 @@ class ApplicationSettings: NSStackView {
         set { Store.shared.set(key: "keep_menubar_positions", value: newValue) }
     }
     
+    private var widgetBorderState: Bool {
+        get { Store.shared.bool(key: "widget_border", defaultValue: false) }
+        set { Store.shared.set(key: "widget_border", value: newValue) }
+    }
+    private var widgetBorderColor: SColor {
+        get {
+            SColor.fromString(
+                Store.shared.string(key: "widget_border_color", defaultValue: SColor.systemAccent.key),
+                defaultValue: .systemAccent
+            )
+        }
+        set { Store.shared.set(key: "widget_border_color", value: newValue.key) }
+    }
+    
     private var updateSelector: NSPopUpButton?
     private var startAtLoginBtn: NSSwitch?
     private var remoteControlBtn: NSSwitch?
@@ -67,6 +81,8 @@ class ApplicationSettings: NSStackView {
     private var combinedModulesView: PreferencesSection?
     private var fanHelperView: PreferencesSection?
     private var remoteView: PreferencesSection?
+    private var borderColorRow: PreferencesRow?
+    private var generalSection: PreferencesSection?
     
     private var updateWindow: UpdateWindow?
     private let moduleSelector: ModuleSelectorView = ModuleSelectorView()
@@ -108,7 +124,13 @@ class ApplicationSettings: NSStackView {
             state: LaunchAtLogin.isEnabled
         )
         
-        scrollView.stackView.addArrangedSubview(PreferencesSection([
+        let borderColorRow = PreferencesRow(localizedString("Border color"), component: colorSelectView(
+            action: #selector(self.toggleWidgetBorderColor),
+            items: SColor.allColors,
+            selected: self.widgetBorderColor.key
+        ))
+        self.borderColorRow = borderColorRow
+        let generalView = PreferencesSection([
             PreferencesRow(localizedString("Check for updates"), component: self.updateSelector!),
             PreferencesRow(localizedString("Temperature"), component: selectView(
                 action: #selector(self.toggleTemperatureUnits),
@@ -124,11 +146,19 @@ class ApplicationSettings: NSStackView {
                 action: #selector(self.toggleMenuBarPosition),
                 state: self.keepMenuBarPosition
             )),
+            PreferencesRow(localizedString("Widget border"), component: switchView(
+                action: #selector(self.toggleWidgetBorder),
+                state: self.widgetBorderState
+            )),
+            borderColorRow,
             PreferencesRow("macOS widgets", component: switchView(
                 action: #selector(self.toggleSystemWidgetsUpdatesState),
                 state: self.systemWidgetsUpdatesState
             ))
-        ]))
+        ])
+        scrollView.stackView.addArrangedSubview(generalView)
+        self.generalSection = generalView
+        generalView.setRowVisibility(borderColorRow, newState: self.widgetBorderState)
         
         self.combinedModulesView = PreferencesSection([
             PreferencesRow(localizedString("Combined modules"), component: switchView(
@@ -414,6 +444,20 @@ class ApplicationSettings: NSStackView {
     
     @objc private func toggleMenuBarPosition(_ sender: NSButton) {
         self.keepMenuBarPosition = sender.state == NSControl.StateValue.on
+    }
+    
+    @objc private func toggleWidgetBorder(_ sender: NSSwitch) {
+        self.widgetBorderState = sender.state == NSControl.StateValue.on
+        if let row = self.borderColorRow, let section = self.generalSection {
+            section.setRowVisibility(row, newState: self.widgetBorderState)
+        }
+        NotificationCenter.default.post(name: .widgetBorderChanged, object: nil)
+    }
+    
+    @objc private func toggleWidgetBorderColor(_ sender: NSMenuItem) {
+        guard let key = sender.representedObject as? String else { return }
+        self.widgetBorderColor = SColor.fromString(key, defaultValue: self.widgetBorderColor)
+        NotificationCenter.default.post(name: .widgetBorderChanged, object: nil)
     }
     
     @objc private func importSettings() {

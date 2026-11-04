@@ -159,7 +159,7 @@ public protocol widget_p: NSView {
     var onClick: (() -> Void)? { get set }
     
     func settings() -> NSView
-    func setSettingsHighlight(_ highlighted: Bool)
+    func updateWidgetBorder()
     func appearanceWidthAdjustment(defaultValue: Int) -> CGFloat
 }
 
@@ -178,6 +178,18 @@ open class WidgetWrapper: NSView, widget_p {
         self.queue = DispatchQueue(label: "eu.exelban.Stats.WidgetWrapper.\(type.rawValue).\(title)")
         
         super.init(frame: frame)
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.handleWidgetBorderChanged),
+            name: .widgetBorderChanged,
+            object: nil
+        )
+        self.updateWidgetBorder()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .widgetBorderChanged, object: nil)
     }
     
     required public init?(coder: NSCoder) {
@@ -294,11 +306,27 @@ open class WidgetWrapper: NSView, widget_p {
         return view
     }
 
-    public func setSettingsHighlight(_ highlighted: Bool) {
-        self.wantsLayer = true
-        self.layer?.borderWidth = highlighted ? 1 : 0
-        self.layer?.borderColor = highlighted ? NSColor.controlAccentColor.cgColor : nil
-        self.layer?.cornerRadius = 2
+    /// Draws the optional border around this widget when the appearance setting enables it.
+    public func updateWidgetBorder() {
+        let enabled = Store.shared.bool(key: "widget_border", defaultValue: false)
+        if enabled {
+            let color = SColor.fromString(
+                Store.shared.string(key: "widget_border_color", defaultValue: SColor.systemAccent.key)
+            ).additional as? NSColor ?? NSColor.controlAccentColor
+            self.wantsLayer = true
+            self.layer?.borderWidth = 1
+            self.layer?.borderColor = color.cgColor
+            self.layer?.cornerRadius = 2
+        } else {
+            self.layer?.borderWidth = 0
+            self.layer?.borderColor = nil
+        }
+    }
+    
+    @objc private func handleWidgetBorderChanged() {
+        DispatchQueue.main.async { [weak self] in
+            self?.updateWidgetBorder()
+        }
     }
     
     open override func mouseDown(with event: NSEvent) {

@@ -16,6 +16,7 @@ struct QuickActionsLayoutTests {
         let systemTestsPassed = QuickActionSystemTests.run()
         let displayProfileTestsPassed = DisplayProfileTests.run()
         verifyUnavailableButton()
+        verifyWidgetBorder()
         verifyToggleAppearance()
         check(QuickActionsManager.shared.actions.map { $0.id } == ["keep_awake", "clamshell_sleep", "screensaver", "lock_screen", "low_power_mode", "display_profile"],
               "The default strip must expose all six requested actions in order")
@@ -86,6 +87,44 @@ struct QuickActionsLayoutTests {
         available = false
         button.performClick(nil)
         check(clicks == 1, "Queued clicks must recheck availability before running")
+    }
+
+    private static func verifyWidgetBorder() {
+        let borderKey = "widget_border"
+        let colorKey = "widget_border_color"
+        let previousBorder = Store.shared.bool(key: borderKey, defaultValue: false)
+        let previousColor = Store.shared.string(key: colorKey, defaultValue: "")
+        defer {
+            Store.shared.set(key: borderKey, value: previousBorder)
+            if previousColor.isEmpty {
+                UserDefaults.standard.removeObject(forKey: colorKey)
+            } else {
+                Store.shared.set(key: colorKey, value: previousColor)
+            }
+        }
+        
+        Store.shared.set(key: borderKey, value: false)
+        let widget = WidgetWrapper(.text, title: "BorderTest", frame: NSRect(x: 0, y: 0, width: 40, height: 22))
+        check((widget.layer?.borderWidth ?? 0) == 0, "A fresh install must not draw a widget border")
+        
+        Store.shared.set(key: borderKey, value: true)
+        Store.shared.set(key: colorKey, value: SColor.red.key)
+        NotificationCenter.default.post(name: .widgetBorderChanged, object: nil)
+        waitUntil { (widget.layer?.borderWidth ?? 0) == 1 }
+        check((widget.layer?.borderWidth ?? 0) == 1, "Enabling the setting must draw the border")
+        check(widget.layer?.borderColor == NSColor.red.cgColor, "The border must use the configured color")
+        
+        Store.shared.set(key: borderKey, value: false)
+        NotificationCenter.default.post(name: .widgetBorderChanged, object: nil)
+        waitUntil { (widget.layer?.borderWidth ?? 1) == 0 }
+        check((widget.layer?.borderWidth ?? 1) == 0, "Disabling the setting must remove the border again")
+    }
+
+    private static func waitUntil(_ done: () -> Bool) {
+        let deadline = Date().addingTimeInterval(3)
+        while !done() && Date() < deadline {
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        }
     }
 
     private static func verifyToggleAppearance() {

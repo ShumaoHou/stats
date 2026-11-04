@@ -590,6 +590,12 @@
 "The sleep setting could not be verified. Click the lid button again to restore it before quitting." = "The sleep setting could not be verified. Click the lid button again to restore it before quitting.";
 "Click the lid button again to restore the original sleep setting." = "Click the lid button again to restore the original sleep setting.";
 "Lock screen" = "Lock screen";
+"Widget border" = "Widget border";
+"Border color" = "Border color";
+"Quit Stats" = "Quit Stats";
+"Quit Stats?" = "Quit Stats?";
+"Quit" = "Quit";
+"The menu bar widgets will disappear and all running copies of Stats will be closed." = "The menu bar widgets will disappear and all running copies of Stats will be closed.";
 "Low Power Mode" = "Low Power Mode";
 "Lock this Mac. Accessibility permission may be required." = "Lock this Mac. Accessibility permission may be required.";
 "Toggle Low Power Mode for battery and power adapter. Kept after quitting Stats." = "Toggle Low Power Mode for battery and power adapter. Kept after quitting Stats.";
