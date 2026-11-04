@@ -1919,11 +1919,11 @@ public func restartApp(_ sender: Any, afterDelay seconds: TimeInterval = 0.5) {
     }
 }
 
-/// Asks the user before closing Stats and every other copy of the app that is currently running.
+/// Asks the user before closing Stats.
 public func confirmAndQuitApp() {
     let alert = NSAlert()
     alert.messageText = localizedString("Quit Stats?")
-    alert.informativeText = localizedString("The menu bar widgets will disappear and all running copies of Stats will be closed.")
+    alert.informativeText = localizedString("Stats will stop running and its menu bar widgets will disappear.")
     alert.alertStyle = .warning
     alert.addButton(withTitle: localizedString("Quit"))
     alert.addButton(withTitle: localizedString("Cancel"))
@@ -1931,14 +1931,8 @@ public func confirmAndQuitApp() {
     quitApp()
 }
 
-/// Terminates every process of this app, including other running copies of the same bundle.
+/// Terminates this app; the termination handler restores the system state before exiting.
 public func quitApp() {
-    if let id = Bundle.main.bundleIdentifier {
-        let current = ProcessInfo.processInfo.processIdentifier
-        NSRunningApplication.runningApplications(withBundleIdentifier: id)
-            .filter { $0.processIdentifier != current }
-            .forEach { $0.terminate() }
-    }
     NSApp.terminate(nil)
 }
 

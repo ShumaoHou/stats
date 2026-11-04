@@ -595,7 +595,7 @@
 "Quit Stats" = "Quit Stats";
 "Quit Stats?" = "Quit Stats?";
 "Quit" = "Quit";
-"The menu bar widgets will disappear and all running copies of Stats will be closed." = "The menu bar widgets will disappear and all running copies of Stats will be closed.";
+"Stats will stop running and its menu bar widgets will disappear." = "Stats will stop running and its menu bar widgets will disappear.";
 "Toggle Low Power Mode for battery and power adapter. Kept after quitting Stats." = "Toggle Low Power Mode for battery and power adapter. Kept after quitting Stats.";
 "Could not lock screen" = "Could not lock screen";
 "Could not change Low Power Mode" = "Could not change Low Power Mode";

@@ -595,7 +595,7 @@
 "Quit Stats" = "退出 Stats";
 "Quit Stats?" = "退出 Stats？";
 "Quit" = "退出";
-"The menu bar widgets will disappear and all running copies of Stats will be closed." = "状态栏组件将会消失，所有正在运行的 Stats 进程都会被关闭。";
+"Stats will stop running and its menu bar widgets will disappear." = "Stats 将停止运行，状态栏组件也会消失。";
 "Low Power Mode" = "省电模式";
 "Lock this Mac. Accessibility permission may be required." = "立即锁定此 Mac，可能需要辅助功能权限。";
 "Toggle Low Power Mode for battery and power adapter. Kept after quitting Stats." = "切换电池和接电时的省电模式，退出 Stats 后保留设置。";

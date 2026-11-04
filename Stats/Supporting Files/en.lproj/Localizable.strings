@@ -595,7 +595,7 @@
 "Quit Stats" = "Quit Stats";
 "Quit Stats?" = "Quit Stats?";
 "Quit" = "Quit";
-"The menu bar widgets will disappear and all running copies of Stats will be closed." = "The menu bar widgets will disappear and all running copies of Stats will be closed.";
+"Stats will stop running and its menu bar widgets will disappear." = "Stats will stop running and its menu bar widgets will disappear.";
 "Low Power Mode" = "Low Power Mode";
 "Lock this Mac. Accessibility permission may be required." = "Lock this Mac. Accessibility permission may be required.";
 "Toggle Low Power Mode for battery and power adapter. Kept after quitting Stats." = "Toggle Low Power Mode for battery and power adapter. Kept after quitting Stats.";
