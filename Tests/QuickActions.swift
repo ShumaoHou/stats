@@ -14,12 +14,13 @@ struct QuickActionsLayoutTests {
         let sleepTestsPassed = ClamshellSleepTests.run()
         let lifecycleTestsPassed = QuickActionsLifecycleTests.run()
         let systemTestsPassed = QuickActionSystemTests.run()
+        let displayProfileTestsPassed = DisplayProfileTests.run()
         verifyUnavailableButton()
         verifyToggleAppearance()
-        check(QuickActionsManager.shared.actions.map { $0.id } == ["keep_awake", "clamshell_sleep", "screensaver", "lock_screen", "low_power_mode"],
-              "The default strip must expose all five requested actions in order")
+        check(QuickActionsManager.shared.actions.map { $0.id } == ["keep_awake", "clamshell_sleep", "screensaver", "lock_screen", "low_power_mode", "display_profile"],
+              "The default strip must expose all six requested actions in order")
         if Bundle.main.preferredLocalizations.first == "zh-Hans" {
-            check(Array(QuickActionsManager.shared.actions.suffix(2)).map { $0.title } == ["锁屏", "省电模式"],
+            check(Array(QuickActionsManager.shared.actions.suffix(3)).map { $0.title } == ["锁屏", "省电模式", "显示器配置"],
                   "New actions must have Chinese names instead of English fallbacks")
         }
         QuickActionsManager.shared.actions = QuickActionsManager.shared.actions.map { original in
@@ -67,7 +68,7 @@ struct QuickActionsLayoutTests {
             }
         }
         print("QuickActions: \(checks - failures)/\(checks) checks passed (\(Bundle.main.preferredLocalizations.joined(separator: ",")))")
-        exit(failures == 0 && sleepTestsPassed && lifecycleTestsPassed && systemTestsPassed ? 0 : 1)
+        exit(failures == 0 && sleepTestsPassed && lifecycleTestsPassed && systemTestsPassed && displayProfileTestsPassed ? 0 : 1)
     }
 
     private static func verifyUnavailableButton() {
@@ -113,7 +114,7 @@ struct QuickActionsLayoutTests {
                   "Strip must remain between the header and original content")
         }
         let buttons = descendants(bar).compactMap { $0 as? QuickActionButton }
-        check(buttons.count == 5, "Exactly five buttons must survive repeated opening")
+        check(buttons.count == 6, "Exactly six buttons must survive repeated opening")
         for (index, button) in buttons.enumerated() {
             let rect = button.convert(button.bounds, to: bar)
             check(rect.width >= 36 && rect.height >= 24 && bar.bounds.contains(rect),
@@ -133,7 +134,7 @@ struct QuickActionsLayoutTests {
             }
             if index > 0 {
                 let previous = buttons[index - 1].convert(buttons[index - 1].bounds, to: bar)
-                check(rect.minX >= previous.maxX + 4 && abs(rect.midY - previous.midY) < 1, "Five buttons must stay in a non-overlapping single row")
+                check(rect.minX >= previous.maxX + 4 && abs(rect.midY - previous.midY) < 1, "Six buttons must stay in a non-overlapping single row")
             }
             // hitTest receives a point in the superview's coordinates, not in the button's bounds.
             for fraction: CGFloat in [0.15, 0.5, 0.85] {

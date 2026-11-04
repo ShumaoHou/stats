@@ -600,4 +600,24 @@
 "Low Power Mode is unavailable on this Mac or its settings could not be read." = "此 Mac 不支持省电模式，或无法读取相关设置。";
 "Administrator authorization was cancelled or Low Power Mode could not be changed." = "管理员授权已取消，或省电模式更改失败。";
 "Low Power Mode could not be verified for all power sources. Check the system Battery or Energy settings." = "无法确认所有电源状态下的省电模式，请检查系统的电池或能源设置。";
+"Display profile" = "显示器配置";
+"Restore the display layout saved for the connected screens." = "恢复已保存的、与当前连接的显示器匹配的布局。";
+"Display layouts" = "显示器布局";
+"Current displays: %0" = "当前显示器：%0";
+"Saved layouts: %0" = "已保存的布局：%0";
+"Matching layout: %0" = "匹配的布局：%0";
+"No saved display layouts yet." = "尚未保存任何显示器布局。";
+"No saved layouts match the connected displays." = "没有与当前显示器匹配的已保存布局。";
+"Restore layout" = "恢复布局";
+"Save current layout" = "保存当前布局";
+"Save display layout" = "保存显示器布局";
+"Enter a name for this display layout. An existing layout with the same name is replaced." = "输入布局名称。同名布局会被覆盖。";
+"Saved display layout: %0" = "已保存显示器布局：%0";
+"Restored display layout: %0" = "已恢复显示器布局：%0";
+"displayplacer is not installed. Install it with Homebrew: brew install displayplacer" = "未安装 displayplacer，请用 Homebrew 安装：brew install displayplacer";
+"The connected displays could not be read." = "无法读取当前连接的显示器。";
+"The current display layout could not be captured." = "无法获取当前显示器布局。";
+"Enter a layout name without path separators." = "请输入不包含路径分隔符的布局名称。";
+"The display layout could not be saved." = "显示器布局保存失败。";
+"The display layout could not be applied." = "显示器布局应用失败。";
 

@@ -23,6 +23,7 @@ public class QuickActionsManager {
     private let clamshell: ClamshellSleepController
     private let lowPower: LowPowerModeController
     private let screenLocker: ScreenLocker
+    private let displayProfiles: DisplayProfilePresenter
     private var powerStateObserver: NSObjectProtocol?
     private let presentError: (String, String) -> Void
     private var isPowerOperationInProgress: Bool { self.clamshell.isBusy || self.lowPower.isBusy }
@@ -37,10 +38,12 @@ public class QuickActionsManager {
     
     internal init(clamshell: ClamshellSleepController = ClamshellSleepController(),
                   lowPower: LowPowerModeController = LowPowerModeController(), screenLocker: ScreenLocker = ScreenLocker(),
+                  displayProfiles: DisplayProfilePresenter = DisplayProfilePresenter(),
                   presentError: @escaping (String, String) -> Void = { showAlert($0, $1, .warning) }) {
         self.clamshell = clamshell
         self.lowPower = lowPower
         self.screenLocker = screenLocker
+        self.displayProfiles = displayProfiles
         self.presentError = presentError
         self.clamshell.onChange = { NotificationCenter.default.post(name: .quickActionsChanged, object: nil) }
         self.lowPower.onChange = { NotificationCenter.default.post(name: .quickActionsChanged, object: nil) }
@@ -123,6 +126,18 @@ public class QuickActionsManager {
                 action: { [weak self] _, completion in
                     guard let self = self else { completion(false); return }
                     self.toggleLowPowerMode(completion: completion)
+                }
+            ),
+            QuickActionItem(
+                id: "display_profile",
+                title: localizedString("Display profile"),
+                toolTip: localizedString("Restore the display layout saved for the connected screens."),
+                iconName: "display.2",
+                isToggle: false,
+                isAvailable: { [weak self] in self?.isPreparingForExit == false },
+                action: { [weak self] _, completion in
+                    self?.displayProfiles.present()
+                    completion(true)
                 }
             )
         ]

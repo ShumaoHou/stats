@@ -119,7 +119,7 @@ public class QuickActionsView: NSView {
         stack.orientation = .horizontal
         stack.distribution = .fillEqually
         stack.alignment = .centerY
-        stack.spacing = 8
+        stack.spacing = 6
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
