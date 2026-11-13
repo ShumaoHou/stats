@@ -144,7 +144,7 @@ struct QuickActionsLayoutTests {
 
     private static func verifyLayout(root: NSView, bar: QuickActionsView) {
         // A constraint-driven strip without an external size collapses to 32×0.
-        check(abs(bar.frame.width - root.bounds.width) < 1 && abs(bar.frame.height - 38) < 1,
+        check(abs(bar.frame.width - root.bounds.width) < 1 && abs(bar.frame.height - QuickActionsView.viewHeight) < 1,
               "Strip must retain the popup's frame-based size; got \(bar.frame)")
         check(!bar.hasAmbiguousLayout, "Strip must not have ambiguous layout")
         if let header = root.subviews.first(where: { $0 is HeaderView }),
@@ -171,9 +171,20 @@ struct QuickActionsLayoutTests {
                 check(iconRect.width >= 14 && abs(iconRect.midX - button.bounds.midX) < 1 && button.bounds.contains(iconRect),
                       "Symbol content \(item.id) must be centered and unclipped: \(iconRect)")
             }
-            if index > 0 {
+            let row = index / 3
+            let column = index % 3
+            if column > 0 {
                 let previous = buttons[index - 1].convert(buttons[index - 1].bounds, to: bar)
-                check(rect.minX >= previous.maxX + 4 && abs(rect.midY - previous.midY) < 1, "Six buttons must stay in a non-overlapping single row")
+                check(rect.minX >= previous.maxX + 4 && abs(rect.midY - previous.midY) < 1, "Buttons in the same row must not overlap: \(previous) vs \(rect)")
+            }
+            if row > 0 {
+                let above = buttons[index - 3].convert(buttons[index - 3].bounds, to: bar)
+                check(rect.maxY <= above.minY - 4 && abs(rect.midX - above.midX) < 1,
+                      "Six buttons must form two stacked rows of three with aligned columns")
+            }
+            if index == 0 {
+                check(rect.minY >= bar.bounds.minY && buttons[5].convert(buttons[5].bounds, to: bar).maxY <= bar.bounds.maxY,
+                      "Both rows must fit inside the strip bounds")
             }
             // hitTest receives a point in the superview's coordinates, not in the button's bounds.
             for fraction: CGFloat in [0.15, 0.5, 0.85] {

@@ -112,14 +112,14 @@ public class QuickActionButton: NSButton {
 }
 
 public class QuickActionsView: NSView {
-    public static let viewHeight: CGFloat = 38
+    public static let viewHeight: CGFloat = 66
+    private static let buttonsPerRow = 3
     
-    private let stackView: NSStackView = {
+    private let gridStack: NSStackView = {
         let stack = NSStackView()
-        stack.orientation = .horizontal
-        stack.distribution = .fillEqually
-        stack.alignment = .centerY
-        stack.spacing = 6
+        stack.orientation = .vertical
+        stack.alignment = .leading
+        stack.spacing = 4
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -132,6 +132,7 @@ public class QuickActionsView: NSView {
     }()
     
     private var actionButtons: [QuickActionButton] = []
+    private var rowStacks: [NSStackView] = []
     
     public init() {
         super.init(frame: NSRect(x: 0, y: 0, width: Constants.Popup.width, height: QuickActionsView.viewHeight))
@@ -151,16 +152,15 @@ public class QuickActionsView: NSView {
     }
     
     private func setupViews() {
-        self.addSubview(self.stackView)
+        self.addSubview(self.gridStack)
         self.addSubview(self.separatorLine)
         
         self.separatorLine.layer?.backgroundColor = (isDarkMode ? NSColor.white.withAlphaComponent(0.12) : NSColor.black.withAlphaComponent(0.08)).cgColor
         
         NSLayoutConstraint.activate([
-            self.stackView.topAnchor.constraint(equalTo: self.topAnchor, constant: 4),
-            self.stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Constants.Popup.margins),
-            self.stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Constants.Popup.margins),
-            self.stackView.heightAnchor.constraint(equalToConstant: 26),
+            self.gridStack.topAnchor.constraint(equalTo: self.topAnchor, constant: 4),
+            self.gridStack.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Constants.Popup.margins),
+            self.gridStack.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Constants.Popup.margins),
             
             self.separatorLine.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1),
             self.separatorLine.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Constants.Popup.margins),
@@ -174,12 +174,32 @@ public class QuickActionsView: NSView {
     public func reloadButtons() {
         self.actionButtons.forEach { $0.removeFromSuperview() }
         self.actionButtons.removeAll()
+        self.rowStacks.forEach { $0.removeFromSuperview() }
+        self.rowStacks.removeAll()
         
         let actions = QuickActionsManager.shared.actions
-        for item in actions {
-            let button = QuickActionButton(item: item)
-            self.actionButtons.append(button)
-            self.stackView.addArrangedSubview(button)
+        let rows = stride(from: 0, to: actions.count, by: Self.buttonsPerRow).map {
+            Array(actions[$0..<min($0 + Self.buttonsPerRow, actions.count)])
+        }
+        for items in rows {
+            let rowStack = NSStackView()
+            rowStack.orientation = .horizontal
+            rowStack.distribution = .fillEqually
+            rowStack.alignment = .centerY
+            rowStack.spacing = 6
+            rowStack.translatesAutoresizingMaskIntoConstraints = false
+            for item in items {
+                let button = QuickActionButton(item: item)
+                self.actionButtons.append(button)
+                rowStack.addArrangedSubview(button)
+            }
+            self.gridStack.addArrangedSubview(rowStack)
+            self.rowStacks.append(rowStack)
+            NSLayoutConstraint.activate([
+                rowStack.leadingAnchor.constraint(equalTo: self.gridStack.leadingAnchor),
+                rowStack.trailingAnchor.constraint(equalTo: self.gridStack.trailingAnchor),
+                rowStack.heightAnchor.constraint(equalToConstant: 26)
+            ])
         }
     }
     
