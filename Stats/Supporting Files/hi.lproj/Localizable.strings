@@ -222,6 +222,7 @@
 "Tachometer widget" = "टैकोमीटर";
 "State widget" = "स्थिति विजेट";
 "Text widget" = "टेक्स्ट विजेट"; // translategemma:4b
+"CPU and RAM widget" = "CPU और RAM विजेट";
 "Battery details widget" = "बैटरी विवरण विजेट"; // translategemma:4b
 "Show symbols" = "प्रतीक दिखाएँ";
 "Label widget" = "लेबल";

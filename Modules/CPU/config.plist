@@ -87,6 +87,20 @@
 			<key>Order</key>
 			<integer>6</integer>
 		</dict>
+		<key>cpu_ram</key>
+		<dict>
+			<key>Default</key>
+			<false/>
+			<key>Preview</key>
+			<dict>
+				<key>CPU</key>
+				<string>CPU: 43%</string>
+				<key>RAM</key>
+				<string>RAM: 13.2 GB</string>
+			</dict>
+			<key>Order</key>
+			<integer>7</integer>
+		</dict>
 	</dict>
 	<key>Settings</key>
 	<dict>

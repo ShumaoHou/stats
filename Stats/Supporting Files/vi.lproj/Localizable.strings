@@ -222,6 +222,7 @@
 "Tachometer widget" = "Widget đo tốc độ";
 "State widget" = "Widget trạng thái";
 "Text widget" = "Widget văn bản"; // gemma4:31b
+"CPU and RAM widget" = "Widget CPU và RAM";
 "Battery details widget" = "Widget chi tiết pin"; // gemma4:31b
 "Show symbols" = "Hiển thị ký hiệu";
 "Label widget" = "Widget nhãn";

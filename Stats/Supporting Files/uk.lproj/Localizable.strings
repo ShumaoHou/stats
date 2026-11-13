@@ -222,6 +222,7 @@
 "Tachometer widget" = "Тахометр";
 "State widget" = "Стан";
 "Text widget" = "Текст";
+"CPU and RAM widget" = "Віджет CPU і RAM";
 "Battery details widget" = "Віджет даних про акумулятор";
 "Show symbols" = "Показати символи";
 "Label widget" = "Етикетка";

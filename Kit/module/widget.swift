@@ -27,6 +27,7 @@ public enum widget_t: String {
     case tachometer = "tachometer"
     case state = "state"
     case text = "text"
+    case cpuRam = "cpu_ram"
     case icon = "icon"
     
     public func new(module: String, config: NSDictionary, defaultWidget: widget_t, icon: NSImage? = nil) -> SWidget? {
@@ -79,6 +80,9 @@ public enum widget_t: String {
         case .text:
             preview = TextWidget(title: module, preview: true)
             item = TextWidget(title: module, preview: false)
+        case .cpuRam:
+            preview = CpuRamWidget(title: module, config: widgetConfig, preview: true)
+            item = CpuRamWidget(title: module, config: widgetConfig, preview: false)
         case .icon:
             preview = IconWidget(title: module, icon: icon, preview: true)
             item = IconWidget(title: module, icon: icon, preview: false)
@@ -147,6 +151,7 @@ public enum widget_t: String {
         case .tachometer: return localizedString("Tachometer widget")
         case .state: return localizedString("State widget")
         case .text: return localizedString("Text widget")
+        case .cpuRam: return localizedString("CPU and RAM widget")
         case .icon: return localizedString("Icon widget")
         default: return ""
         }

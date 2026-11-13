@@ -222,6 +222,7 @@
 "Tachometer widget" = "轉速計";
 "State widget" = "狀態小工具";
 "Text widget" = "文字";
+"CPU and RAM widget" = "CPU 與記憶體";
 "Battery details widget" = "電池詳細資訊";
 "Show symbols" = "顯示符號";
 "Label widget" = "標籤";

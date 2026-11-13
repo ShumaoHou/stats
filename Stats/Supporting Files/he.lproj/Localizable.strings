@@ -222,6 +222,7 @@
 "Tachometer widget" = "טכומטר";
 "State widget" = "ווידג'ט מצב"; // gemma4:31b
 "Text widget" = "ווידג'ט טקסט"; // gemma4:31b
+"CPU and RAM widget" = "ווידג׳ט CPU וזיכרון";
 "Battery details widget" = "ווידג'ט פרטי סוללה"; // gemma4:31b
 "Show symbols" = "הראה סמלים";
 "Label widget" = "תווית";

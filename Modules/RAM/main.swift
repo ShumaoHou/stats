@@ -154,6 +154,10 @@ public class RAM: Module {
         self.portalView.callback(value)
         self.notificationsView.loadCallback(value)
         self.previewView.loadCallback(value)
+        NotificationCenter.default.post(name: .ramUsageUpdate, object: nil, userInfo: [
+            "used": value.used,
+            "usage": value.usage
+        ])
         
         let total: Double = value.total == 0 ? 1 : value.total
         self.menuBar.widgets.filter{ $0.isActive }.forEach { (w: SWidget) in

@@ -222,6 +222,7 @@
 "Tachometer widget" = "Тахометър";
 "State widget" = "Виджет за състояние"; // gemma4:31b
 "Text widget" = "Текстов уиджет"; // gemma4:31b
+"CPU and RAM widget" = "Уиджет за CPU и RAM";
 "Battery details widget" = "Виджет с подробности за батерията"; // gemma4:31b
 "Show symbols" = "Показване на символи";
 "Label widget" = "Етикет";

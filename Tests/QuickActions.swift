@@ -14,8 +14,10 @@ struct QuickActionsLayoutTests {
         let sleepTestsPassed = ClamshellSleepTests.run()
         let lifecycleTestsPassed = QuickActionsLifecycleTests.run()
         let systemTestsPassed = QuickActionSystemTests.run()
+        let cpuRamWidgetTestsPassed = CpuRamWidgetTests.run()
         let displayProfileTestsPassed = DisplayProfileTests.run()
         verifyUnavailableButton()
+        verifyCpuRamSelector()
         verifyWidgetBorder()
         verifyToggleAppearance()
         check(QuickActionsManager.shared.actions.map { $0.id } == ["keep_awake", "clamshell_sleep", "screensaver", "lock_screen", "low_power_mode", "display_profile"],
@@ -69,7 +71,7 @@ struct QuickActionsLayoutTests {
             }
         }
         print("QuickActions: \(checks - failures)/\(checks) checks passed (\(Bundle.main.preferredLocalizations.joined(separator: ",")))")
-        exit(failures == 0 && sleepTestsPassed && lifecycleTestsPassed && systemTestsPassed && displayProfileTestsPassed ? 0 : 1)
+        exit(failures == 0 && sleepTestsPassed && lifecycleTestsPassed && systemTestsPassed && cpuRamWidgetTestsPassed && displayProfileTestsPassed ? 0 : 1)
     }
 
     private static func verifyUnavailableButton() {
@@ -88,6 +90,15 @@ struct QuickActionsLayoutTests {
         button.performClick(nil)
         check(clicks == 1, "Queued clicks must recheck availability before running")
     }
+
+    private static func verifyCpuRamSelector() {
+        let type = widget_t(rawValue: "cpu_ram")
+        check(type == .cpuRam && type?.name() == localizedString("CPU and RAM widget"), "cpu_ram must be a selectable widget type with a localized name")
+        let widget = widget_t.cpuRam.new(module: "CPU", config: configStub, defaultWidget: .mini)
+        check(widget != nil, "cpu_ram must instantiate through the shared widget factory")
+    }
+
+    private static let configStub: NSDictionary = ["cpu_ram": ["Preview": ["CPU": "CPU: 43%", "RAM": "RAM: 13.2 GB"]]]
 
     private static func verifyWidgetBorder() {
         let borderKey = "widget_border"

@@ -222,6 +222,7 @@
 "Tachometer widget" = "Tacòmetre";
 "State widget" = "Widget d'estat"; // translategemma:4b
 "Text widget" = "Widget de text"; // gemma4:31b
+"CPU and RAM widget" = "Giny de CPU i RAM";
 "Battery details widget" = "Widget de detalls de la bateria"; // translategemma:4b
 "Show symbols" = "Mostra els símbols";
 "Label widget" = "Etiqueta";

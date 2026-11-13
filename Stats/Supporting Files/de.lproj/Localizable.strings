@@ -222,6 +222,7 @@
 "Tachometer widget" = "Drehzahlmesser"; // gemma4:31b
 "State widget" = "Status-Widget";
 "Text widget" = "Text-Widget";
+"CPU and RAM widget" = "CPU- und RAM-Widget";
 "Battery details widget" = "Batteriedetails-Widget";
 "Show symbols" = "Symbole anzeigen";
 "Label widget" = "Beschriftung";

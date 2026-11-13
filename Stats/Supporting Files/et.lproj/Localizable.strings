@@ -222,6 +222,7 @@
 "Tachometer widget" = "Tahhomeetrividin";
 "State widget" = "Olekuvidin";
 "Text widget" = "Tekstividin";
+"CPU and RAM widget" = "CPU ja RAM-i vidin";
 "Battery details widget" = "Aku üksikasjade vidin";
 "Show symbols" = "Näita sümboleid";
 "Label widget" = "Sildividin";

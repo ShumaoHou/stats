@@ -222,6 +222,7 @@
 "Tachometer widget" = "Tachimetru"; // gemma4:31b
 "State widget" = "Widget de stare"; // translategemma:4b
 "Text widget" = "Widget de text"; // translategemma:4b
+"CPU and RAM widget" = "Widget CPU și RAM";
 "Battery details widget" = "Widget detalii baterie"; // gemma4:31b
 "Show symbols" = "Afișează simbolurile"; // gemma4:31b
 "Label widget" = "Etichetă"; // translategemma:4b

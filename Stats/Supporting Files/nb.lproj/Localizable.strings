@@ -222,6 +222,7 @@
 "Tachometer widget" = "Turteller"; // gemma4:31b
 "State widget" = "Tilstandsdiagram";
 "Text widget" = "Tekstwidget"; // gemma4:31b
+"CPU and RAM widget" = "CPU- og RAM-widget";
 "Battery details widget" = "Batteridetaljer-widget"; // gemma4:31b
 "Show symbols" = "Vis symboler";
 "Label widget" = "Merkelapp";

@@ -222,6 +222,7 @@
 "Tachometer widget" = "Toerenteller"; // gemma4:31b
 "State widget" = "Status-widget"; // gemma4:31b
 "Text widget" = "Tekstwidget"; // translategemma:4b
+"CPU and RAM widget" = "CPU- en RAM-widget";
 "Battery details widget" = "Widget voor batterijdetails"; // gemma4:31b
 "Show symbols" = "Toon symbolen";
 "Label widget" = "Label";

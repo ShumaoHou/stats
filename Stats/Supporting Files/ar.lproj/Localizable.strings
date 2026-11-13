@@ -222,6 +222,7 @@
 "Tachometer widget" = "العداد";
 "State widget" = "عداد حالة";
 "Text widget" = "أداة النص"; // gemma4:31b
+"CPU and RAM widget" = "ويدجت CPU وRAM";
 "Battery details widget" = "أداة تفاصيل البطارية"; // gemma4:31b
 "Show symbols" = "إظهار الرموز";
 "Label widget" = "تسمية";

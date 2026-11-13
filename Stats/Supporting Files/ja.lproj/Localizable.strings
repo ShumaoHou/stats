@@ -222,6 +222,7 @@
 "Tachometer widget" = "タコメーター";
 "State widget" = "状態ウィジェット"; // gemma4:31b
 "Text widget" = "テキストウィジェット"; // translategemma:4b
+"CPU and RAM widget" = "CPUとRAMウィジェット";
 "Battery details widget" = "バッテリー詳細ウィジェット"; // translategemma:4b
 "Show symbols" = "シンボルを表示";
 "Label widget" = "ラベル";

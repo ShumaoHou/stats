@@ -222,6 +222,7 @@
 "Tachometer widget" = "Widget de tacómetro";
 "State widget" = "Widget de estados";
 "Text widget" = "Widget de texto"; // translategemma:4b
+"CPU and RAM widget" = "Widget de CPU e RAM";
 "Battery details widget" = "Widget de detalhes da bateria"; // translategemma:4b
 "Show symbols" = "Mostrar simbolos";
 "Label widget" = "Widget de etiquetas";

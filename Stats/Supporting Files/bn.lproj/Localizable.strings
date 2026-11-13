@@ -222,6 +222,7 @@
 "Tachometer widget" = "ট্যাকোমিটার";
 "State widget" = "অবস্থা উইজেট";
 "Text widget" = "টেক্সট উইজেট";
+"CPU and RAM widget" = "CPU এবং RAM উইজেট";
 "Battery details widget" = "ব্যাটারি বিস্তারিত উইজেট";
 "Show symbols" = "প্রতীক দেখান";
 "Label widget" = "লেবেল";

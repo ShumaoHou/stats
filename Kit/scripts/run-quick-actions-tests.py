@@ -73,6 +73,7 @@ def run():
             str(ROOT / "SMC/smc.swift"), str(ROOT / "SMC/Helper/protocol.swift"),
             str(ROOT / "Tests/QuickActions.swift"), str(ROOT / "Tests/ClamshellSleep.swift"),
             str(ROOT / "Tests/QuickActionsLifecycle.swift"), str(ROOT / "Tests/QuickActionSystemTests.swift"),
+            str(ROOT / "Tests/CpuRamWidgetTests.swift"),
             str(ROOT / "Tests/DisplayProfiles.swift"),
             str(build / "LifecycleUnderTest.swift"), str(build / "lldb.o"),
             "-L", str(ROOT / "Kit/lldb"), "-lleveldb", "-lc++", "-o", str(binary),

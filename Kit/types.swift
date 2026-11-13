@@ -320,6 +320,8 @@ public extension Notification.Name {
     static let remoteAuthenticated = Notification.Name("remoteAuthenticated")
     static let remoteUpdate = Notification.Name("remoteUpdate")
     static let openWindow = Notification.Name("openWindow")
+    static let cpuUsageUpdate = Notification.Name("cpuUsageUpdate")
+    static let ramUsageUpdate = Notification.Name("ramUsageUpdate")
 }
 
 public var isARM: Bool {

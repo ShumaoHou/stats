@@ -14,6 +14,7 @@
 		FA0100092CE0000100000005 /* ClamshellSleepController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0100082CE0000100000005 /* ClamshellSleepController.swift */; };
 		FA01000B2CE0000100000006 /* QuickActionSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA01000A2CE0000100000006 /* QuickActionSystem.swift */; };
 		FA01000D2CE0000100000007 /* LowPowerModeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA01000C2CE0000100000007 /* LowPowerModeController.swift */; };
+		FA0100142CE000010000000A /* CpuRam.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0100132CE000010000000A /* CpuRam.swift */; };
 		FA01000F2CE0000100000008 /* DisplayProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA01000E2CE0000100000008 /* DisplayProfileController.swift */; };
 		FA0100112CE0000100000009 /* DisplayProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0100102CE0000100000009 /* DisplayProfilePresenter.swift */; };
 		5C038CF62D86EE8A00516809 /* SystemStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C038CF52D86EE8700516809 /* SystemStats.swift */; };
@@ -556,6 +557,7 @@
 		FA0100082CE0000100000005 /* ClamshellSleepController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClamshellSleepController.swift; sourceTree = "<group>"; };
 		FA01000A2CE0000100000006 /* QuickActionSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickActionSystem.swift; sourceTree = "<group>"; };
 		FA01000C2CE0000100000007 /* LowPowerModeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LowPowerModeController.swift; sourceTree = "<group>"; };
+		FA0100132CE000010000000A /* CpuRam.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CpuRam.swift; sourceTree = "<group>"; };
 		FA01000E2CE0000100000008 /* DisplayProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayProfileController.swift; sourceTree = "<group>"; };
 		FA0100102CE0000100000009 /* DisplayProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayProfilePresenter.swift; sourceTree = "<group>"; };
 		40BE2B202745D63800AE9396 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1157,6 +1159,7 @@
 				9A2847562666AA2700EC1F6D /* NetworkChart.swift */,
 				9A28475A2666AA2700EC1F6D /* Battery.swift */,
 				9A28475B2666AA2700EC1F6D /* Memory.swift */,
+				FA0100132CE000010000000A /* CpuRam.swift */,
 				9A28475E2666AA2700EC1F6D /* Stack.swift */,
 				9A28475C2666AA2700EC1F6D /* Speed.swift */,
 				9A9B8C9C27149A3700218374 /* Tachometer.swift */,
@@ -2278,6 +2281,7 @@
 				FA0100092CE0000100000005 /* ClamshellSleepController.swift in Sources */,
 				FA01000B2CE0000100000006 /* QuickActionSystem.swift in Sources */,
 				FA01000D2CE0000100000007 /* LowPowerModeController.swift in Sources */,
+				FA0100142CE000010000000A /* CpuRam.swift in Sources */,
 				FA01000F2CE0000100000008 /* DisplayProfileController.swift in Sources */,
 				FA0100112CE0000100000009 /* DisplayProfilePresenter.swift in Sources */,
 				5C621D822B4770D6004ED7AF /* process.swift in Sources */,
@@ -2304,6 +2308,7 @@
 				9A28477C2666AA5000EC1F6D /* reader.swift in Sources */,
 				9A9B8C9D27149A3700218374 /* Tachometer.swift in Sources */,
 				9A2847652666AA2700EC1F6D /* Memory.swift in Sources */,
+				FA0100142CE000010000000A /* CpuRam.swift in Sources */,
 				9A2847642666AA2700EC1F6D /* Battery.swift in Sources */,
 				9A28480B2666AB3000EC1F6D /* Charts.swift in Sources */,
 				9A2847632666AA2700EC1F6D /* Mini.swift in Sources */,

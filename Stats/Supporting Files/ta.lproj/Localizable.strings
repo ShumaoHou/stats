@@ -222,6 +222,7 @@
 "Tachometer widget" = "டாகோமீட்டர்"; // qwen3.8:27b
 "State widget" = "நிலை விட்ஜெட்";
 "Text widget" = "உரை விட்ஜெட்";
+"CPU and RAM widget" = "CPU மற்றும் RAM விட்ஜெட்";
 "Battery details widget" = "மின்கல விவரங்கள் விட்ஜெட்";
 "Show symbols" = "சின்னங்களைக் காட்டு";
 "Label widget" = "சிட்டை";

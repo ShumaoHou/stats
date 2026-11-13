@@ -222,6 +222,7 @@
 "Tachometer widget" = "Takometer";
 "State widget" = "Widget status"; // gemma4:31b
 "Text widget" = "Widget teks"; // gemma4:31b
+"CPU and RAM widget" = "Widget CPU dan RAM";
 "Battery details widget" = "Widget detail baterai"; // translategemma:4b
 "Show symbols" = "Tampilkan simbol";
 "Label widget" = "Label";

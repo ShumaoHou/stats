@@ -222,6 +222,7 @@
 "Tachometer widget" = "تاکومتر";
 "State widget" = "ویجت حالت";
 "Text widget" = "ویجت متن"; // gemma4:31b
+"CPU and RAM widget" = "ویجت CPU و RAM";
 "Battery details widget" = "ویجت جزئیات باتری"; // gemma4:31b
 "Show symbols" = "نمایش نمادها";
 "Label widget" = "لیبل";

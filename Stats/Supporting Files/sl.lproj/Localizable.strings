@@ -222,6 +222,7 @@
 "Tachometer widget" = "Tahometer";
 "State widget" = "Pripomoček stanja";
 "Text widget" = "Besedilo";
+"CPU and RAM widget" = "Pripomoček CPU in RAM";
 "Battery details widget" = "Podrobnosti baterije";
 "Show symbols" = "Prikaži simbole";
 "Label widget" = "Oznaka";

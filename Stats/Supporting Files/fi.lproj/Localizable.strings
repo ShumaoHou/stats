@@ -222,6 +222,7 @@
 "Tachometer widget" = "Tachometri";
 "State widget" = "Tila";
 "Text widget" = "Tekstiwidget"; // gemma4:31b
+"CPU and RAM widget" = "CPU- ja RAM-widget";
 "Battery details widget" = "Akun tiedot -widget"; // translategemma:4b
 "Show symbols" = "Näytä symbolit";
 "Label widget" = "Tunniste";

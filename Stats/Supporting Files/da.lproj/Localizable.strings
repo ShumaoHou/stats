@@ -222,6 +222,7 @@
 "Tachometer widget" = "Omdrejningstæller";
 "State widget" = "Status";
 "Text widget" = "Tekst-widget"; // gemma4:31b
+"CPU and RAM widget" = "CPU- og RAM-widget";
 "Battery details widget" = "Widget til batteridetaljer"; // gemma4:31b
 "Show symbols" = "Vis symboler";
 "Label widget" = "Etiket"; // gemma4:31b
