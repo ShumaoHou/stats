@@ -156,7 +156,8 @@ public class RAM: Module {
         self.previewView.loadCallback(value)
         NotificationCenter.default.post(name: .ramUsageUpdate, object: nil, userInfo: [
             "used": value.used,
-            "usage": value.usage
+            "usage": value.usage,
+            "pressure": value.pressure.value.rawValue as String
         ])
         
         let total: Double = value.total == 0 ? 1 : value.total

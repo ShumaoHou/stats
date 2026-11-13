@@ -223,6 +223,8 @@
 "State widget" = "Tillståndswidget";
 "Text widget" = "Textwidget"; // translategemma:4b
 "CPU and RAM widget" = "CPU- och RAM-widget";
+"CPU color" = "CPU-färg";
+"RAM color" = "RAM-färg";
 "Battery details widget" = "Widget för batteridetaljer"; // gemma4:31b
 "Show symbols" = "Visa symboler";
 "Label widget" = "Etikett";

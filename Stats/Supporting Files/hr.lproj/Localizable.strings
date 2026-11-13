@@ -223,6 +223,8 @@
 "State widget" = "Widget stanja"; // gemma4:31b
 "Text widget" = "Tekstualni widget"; // gemma4:31b
 "CPU and RAM widget" = "CPU i RAM widget";
+"CPU color" = "Boja CPU-a";
+"RAM color" = "Boja RAM-a";
 "Battery details widget" = "Vidžet detalja baterije"; // gemma4:31b
 "Show symbols" = "Prikaži simbole";
 "Label widget" = "Oznaka";

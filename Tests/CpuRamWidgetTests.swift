@@ -11,6 +11,7 @@ struct CpuRamWidgetTests {
         testRenderingAndWidth()
         testPartialDataAndNoData()
         testNotificationUpdates()
+        testColorModes()
         print("CpuRamWidget: \(checks - failures)/\(checks) checks passed")
         return failures == 0
     }
@@ -80,6 +81,41 @@ struct CpuRamWidgetTests {
         NotificationCenter.default.post(name: .cpuUsageUpdate, object: nil, userInfo: [:])
         drainMain()
         check(widget.lastCPU == "55%", "Malformed broadcast must not clear good data")
+    }
+
+    private static func testColorModes() {
+        let widget = CpuRamWidget(title: "CPU", config: nil)
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 300, height: 40),
+            styleMask: .borderless, backing: .buffered, defer: false
+        )
+        window.contentView?.addSubview(widget)
+        window.orderFrontRegardless()
+        widget.setStrings("CPU: 43%", "RAM: 13.2 GB")
+        drainMain()
+        check(widget.cpuColor(for: 0.43) == 0.43.usageColor(), "CPU line must default to utilization-based color")
+        check(widget.ramColor(pressure: .normal) == RAMPressure.normal.pressureColor(), "RAM line must default to pressure-based color")
+        check(widget.ramColor(pressure: .critical) == RAMPressure.critical.pressureColor(), "Critical pressure must turn the RAM line red")
+        check(widget.ramColor(pressure: .normal, usage: 0.99) == RAMPressure.normal.pressureColor(), "Pressure mode ignores RAM usage")
+
+        widget.setCPUColor(SColor.monochrome.key)
+        check(widget.cpuColor(for: 0.99) == (isDarkMode ? NSColor.white : NSColor.black), "CPU monochrome ignores utilization")
+        widget.setRAMColor(SColor.utilization.key)
+        check(widget.ramColor(pressure: .normal, usage: 0.9) == 0.9.usageColor(), "RAM utilization mode ignores pressure")
+        widget.setRAMColor(SColor.custom(NSColor.purple).key)
+        let customRAM = widget.ramColor(pressure: .critical, usage: 0.99)
+        check(customRAM == NSColor.purple || abs(customRAM.redComponent - NSColor.purple.redComponent) < 0.02,
+              "RAM custom color ignores both modes; got \(customRAM)")
+        widget.setRAMColor(SColor.pressure.key)
+
+        NotificationCenter.default.post(name: .ramUsageUpdate, object: nil, userInfo: [
+            "used": 8.0 * 1_073_741_824, "usage": 0.5, "pressure": RAMPressure.warning,
+        ])
+        drainMain()
+        check(widget.lastPressure == "warning", "RAM broadcast must carry the pressure level; got \(String(describing: widget.lastPressure))")
+        check(widget.ramColor() == RAMPressure.warning.pressureColor(), "Stored pressure colors the RAM line")
+
+        check(widget.settings().subviews.count > 0, "Widget settings must exist")
     }
 
     /// draw() only runs when the view has a window host; provide one like the menubar does.

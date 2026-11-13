@@ -223,6 +223,8 @@
 "State widget" = "Olekuvidin";
 "Text widget" = "Tekstividin";
 "CPU and RAM widget" = "CPU ja RAM-i vidin";
+"CPU color" = "CPU värv";
+"RAM color" = "RAM-i värv";
 "Battery details widget" = "Aku üksikasjade vidin";
 "Show symbols" = "Näita sümboleid";
 "Label widget" = "Sildividin";

@@ -223,6 +223,8 @@
 "State widget" = "Stav";
 "Text widget" = "Textový widget"; // gemma4:31b
 "CPU and RAM widget" = "Widget CPU a RAM";
+"CPU color" = "Barva CPU";
+"RAM color" = "Barva RAM";
 "Battery details widget" = "Widget detailů baterie"; // gemma4:31b
 "Show symbols" = "Zobrazit symboly";
 "Label widget" = "Popisek";

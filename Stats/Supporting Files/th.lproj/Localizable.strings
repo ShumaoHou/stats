@@ -223,6 +223,8 @@
 "State widget" = "เครื่องวัดสถานะ";
 "Text widget" = "วิดเจ็ตข้อความ"; // gemma4:31b
 "CPU and RAM widget" = "วิดเจ็ต CPU และ RAM";
+"CPU color" = "สี CPU";
+"RAM color" = "สี RAM";
 "Battery details widget" = "วิดเจ็ตรายละเอียดแบตเตอรี่"; // gemma4:31b
 "Show symbols" = "แสดงสัญลักษณ์";
 "Label widget" = "ป้ายชื่อ";

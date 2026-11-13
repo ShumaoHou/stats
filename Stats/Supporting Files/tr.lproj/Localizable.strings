@@ -223,6 +223,8 @@
 "State widget" = "Durum widget'ı";
 "Text widget" = "Metin widget'ı";
 "CPU and RAM widget" = "CPU ve RAM widget’ı";
+"CPU color" = "CPU rengi";
+"RAM color" = "RAM rengi";
 "Battery details widget" = "Pil ayrıntıları widget'ı";
 "Show symbols" = "Sembolleri göster";
 "Label widget" = "Etiket widget'ı";

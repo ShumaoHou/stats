@@ -223,6 +223,8 @@
 "State widget" = "Status-Widget";
 "Text widget" = "Text-Widget";
 "CPU and RAM widget" = "CPU- und RAM-Widget";
+"CPU color" = "CPU-Farbe";
+"RAM color" = "RAM-Farbe";
 "Battery details widget" = "Batteriedetails-Widget";
 "Show symbols" = "Symbole anzeigen";
 "Label widget" = "Beschriftung";

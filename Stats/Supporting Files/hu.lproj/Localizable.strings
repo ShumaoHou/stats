@@ -223,6 +223,8 @@
 "State widget" = "Állapot";
 "Text widget" = "Szöveg-widget"; // gemma4:31b
 "CPU and RAM widget" = "CPU és RAM widget";
+"CPU color" = "CPU szín";
+"RAM color" = "RAM szín";
 "Battery details widget" = "Akkumulátor részletek widgetje"; // gemma4:31b
 "Show symbols" = "Szimbólumok mutatása";
 "Label widget" = "Címke";

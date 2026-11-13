@@ -223,6 +223,8 @@
 "State widget" = "Στοιχείο κατάστασης"; // gemma4:31b
 "Text widget" = "Widget κειμένου"; // translategemma:4b
 "CPU and RAM widget" = "Γραφικό στοιχείο CPU και RAM";
+"CPU color" = "Χρώμα CPU";
+"RAM color" = "Χρώμα RAM";
 "Battery details widget" = "Στοιχείο λεπτομερειών μπαταρίας"; // gemma4:31b
 "Show symbols" = "Εμφάνιση συμβόλων";
 "Label widget" = "Ετικέτα";

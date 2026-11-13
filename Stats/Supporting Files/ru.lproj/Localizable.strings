@@ -223,6 +223,8 @@
 "State widget" = "Состояние";
 "Text widget" = "Текст";
 "CPU and RAM widget" = "Виджет CPU и RAM";
+"CPU color" = "Цвет CPU";
+"RAM color" = "Цвет RAM";
 "Battery details widget" = "Виджет сведений о батарее";
 "Show symbols" = "Показать символы";
 "Label widget" = "Метка";

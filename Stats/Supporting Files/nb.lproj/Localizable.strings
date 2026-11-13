@@ -223,6 +223,8 @@
 "State widget" = "Tilstandsdiagram";
 "Text widget" = "Tekstwidget"; // gemma4:31b
 "CPU and RAM widget" = "CPU- og RAM-widget";
+"CPU color" = "CPU-farge";
+"RAM color" = "RAM-farge";
 "Battery details widget" = "Batteridetaljer-widget"; // gemma4:31b
 "Show symbols" = "Vis symboler";
 "Label widget" = "Merkelapp";
